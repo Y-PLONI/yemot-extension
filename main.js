@@ -1,75 +1,55 @@
 import fetch from "node-fetch";
+import fs from "fs";
 
-// ====== הגדרות ======
-const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-.../pub?output=csv"; // הכנס כאן את הקישור הפומבי ל-CSV
-const GITHUB_USER = "mhotjrubho";
-const REPO_NAME = "yemot-shits-24-9";
-const BRANCH = "main";
-const FILE_PATH = "ym_items.json";
-const TOKEN = process.env.GITHUB_TOKEN;
+// קישור CSV פומבי מ-Google Sheets
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ.../pub?output=csv"; // החלף כאן בקישור הפומבי שלך
 
-// ====== פונקציה לקריאת CSV ======
-async function fetchCSV(url) {
-  const response = await fetch(url);
-  const text = await response.text();
-  const lines = text.trim().split("\n");
-  const items = [];
+async function fetchCSV() {
+  try {
+    const res = await fetch(SHEET_CSV_URL);
+    if (!res.ok) throw new Error(`שגיאה ב-fetch: ${res.status}`);
+    const text = await res.text();
 
-  for (let i = 1; i < lines.length; i++) { // מתחילים מהשורה השנייה
-    const [col1, col2, col3] = lines[i].split(",");
-    items.push({
-      title: col1,
-      code: col2,
-      keywords: col3
-    });
-  }
-  return items;
-}
+    // מפצל לשורות
+    const lines = text.trim().split("\n");
+    console.log("שורות מה-CSV:", lines);
 
-// ====== פונקציה לעדכון GitHub ======
-async function updateGithubJSON(items) {
-  const url = `https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}/contents/${FILE_PATH}`;
-
-  // קודם כל קבלת ה-SHA של הקובץ הקיים
-  const getResponse = await fetch(url, {
-    headers: {
-      "Authorization": `token ${TOKEN}`,
-      "Accept": "application/vnd.github.v3+json"
+    if (lines.length <= 1) {
+      console.log("לא נמצאו נתונים לשמירה.");
+      return [];
     }
-  });
 
-  const data = await getResponse.json();
-  const sha = data.sha;
+    const headers = lines[0].split(/,|;/); // מפריד , או ;
+    const items = [];
 
-  const payload = {
-    message: "עדכון JSON אוטומטי משיטס",
-    content: Buffer.from(JSON.stringify(items, null, 2)).toString("base64"),
-    sha: sha,
-    branch: BRANCH
-  };
+    for (let i = 1; i < lines.length; i++) {
+      const row = lines[i].split(/,|;/);
+      // מתעלם משורות ריקות
+      if (row.every(cell => cell.trim() === "")) continue;
 
-  const putResponse = await fetch(url, {
-    method: "PUT",
-    headers: {
-      "Authorization": `token ${TOKEN}`,
-      "Accept": "application/vnd.github.v3+json"
-    },
-    body: JSON.stringify(payload)
-  });
+      items.push({
+        title: row[0] || "",
+        code: row[1] || "",
+        keywords: row[2] || ""
+      });
+    }
 
-  const result = await putResponse.json();
-  console.log("GitHub response:", result);
+    console.log("נתונים שנמצאו:", items);
+    return items;
+
+  } catch (err) {
+    console.error("שגיאה ב-fetchCSV:", err);
+    return [];
+  }
 }
 
-// ====== הרצה ======
 async function main() {
-  const items = await fetchCSV(SHEET_CSV_URL);
-  if (items.length === 0) {
-    console.log("לא נמצאו נתונים לשמירה.");
-    return;
-  }
-  await updateGithubJSON(items);
-  console.log("✅ JSON עודכן בהצלחה ב-GitHub!");
+  const data = await fetchCSV();
+  if (data.length === 0) return;
+
+  // כאן תוכל להוסיף את קוד העדכון ל-GitHub או שמירה ל־JSON
+  fs.writeFileSync("ym_items.json", JSON.stringify(data, null, 2));
+  console.log("JSON נוצר בהצלחה!");
 }
 
 main();
