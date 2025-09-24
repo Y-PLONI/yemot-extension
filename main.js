@@ -1,81 +1,47 @@
-// index.js
+import fs from "fs";
 import fetch from "node-fetch";
-import { Octokit } from "octokit";
-import cron from "node-cron";
+import simpleGit from "simple-git";
+import { parse } from "csv-parse/sync";
 
-// ====== הגדרות ======
-const SHEET_CSV_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vQYdZLuuZacr2IiplRcwk30MZ8VGewHRLtKzMY/pub?output=csv";
-const GITHUB_USER = "mhotjrubho";
-const REPO_NAME = "yemot-shits-24-9";
-const FILE_PATH = "ym_items.json";
-const BRANCH = "main";
+// קישור פומבי לייצוא CSV מתוך Google Sheets
+const csvUrl =
+  "https://docs.google.com/spreadsheets/d/1XY1isQ5QdZLuuZacr2IiplRcwk30MZ8VGewHRLtKzMY/export?format=csv&id=1XY1isQ5QdZLuuZacr2IiplRcwk30MZ8VGewHRLtKzMY&gid=0";
 
-// חשוב: הכנס את ה-PAT שלך ב-Railway כ-environment variable בשם GITHUB_TOKEN
-const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+async function fetchData() {
+  console.log("📥 מושך נתונים מהקובץ:");
+  console.log(csvUrl); // כאן תראה בדיוק מאיזה לינק הנתונים מגיעים
 
-// ====== פונקציה לקריאת Google Sheet כ-CSV ======
-async function fetchSheet() {
-  const res = await fetch(SHEET_CSV_URL);
-  const text = await res.text();
-  const lines = text.split("\n");
-  const items = [];
-  const headers = lines[0].split(",");
+  const response = await fetch(csvUrl);
+  const csvText = await response.text();
 
-  for (let i = 1; i < lines.length; i++) {
-    const row = lines[i].split(",");
-    if (row.length < 3) continue; // דילוג על שורות ריקות או לא תקינות
-    items.push({
-      title: row[0].trim(),
-      code: row[1].trim(),
-      keywords: row[2].trim(),
-    });
-  }
-  return items;
+  // המרה של CSV ל-JSON לפי הכותרות (השורה הראשונה)
+  const records = parse(csvText, {
+    columns: true,
+    skip_empty_lines: true,
+  });
+
+  console.log(`📊 נטענו ${records.length} שורות מהשיטס.`);
+  return records;
 }
 
-// ====== פונקציה לעדכון GitHub ======
-async function updateGithub(jsonData) {
+async function updateJsonAndPush() {
   try {
-    // קבלת SHA של הקובץ הקיים
-    const { data } = await octokit.rest.repos.getContent({
-      owner: GITHUB_USER,
-      repo: REPO_NAME,
-      path: FILE_PATH,
-      ref: BRANCH,
-    });
+    const data = await fetchData();
 
-    const sha = data.sha;
+    // שמירת הנתונים בקובץ JSON
+    fs.writeFileSync("data.json", JSON.stringify(data, null, 2), "utf-8");
+    console.log("✅ הקובץ data.json נבנה בהצלחה!");
 
-    const contentBase64 = Buffer.from(JSON.stringify(jsonData, null, 2)).toString(
-      "base64"
-    );
+    // עדכון ל-GitHub
+    const git = simpleGit();
+    await git.add("data.json");
+    await git.commit("עדכון אוטומטי של נתוני Google Sheets");
+    await git.push("origin", "main");
 
-    await octokit.rest.repos.createOrUpdateFileContents({
-      owner: GITHUB_USER,
-      repo: REPO_NAME,
-      path: FILE_PATH,
-      message: "עדכון JSON משיטס אוטומטי",
-      content: contentBase64,
-      sha,
-      branch: BRANCH,
-    });
-
-    console.log("✅ JSON עודכן בהצלחה ב-GitHub!");
-  } catch (err) {
-    console.error("❌ שגיאה בעדכון GitHub:", err);
+    console.log("🚀 הנתונים הועלו ל-GitHub בהצלחה!");
+  } catch (error) {
+    console.error("❌ שגיאה:", error);
   }
 }
 
-// ====== משימה שבועית ======
-cron.schedule("0 0 * * 0", async () => {
-  console.log("🔄 מתחיל עדכון שבועי...");
-  const data = await fetchSheet();
-  await updateGithub(data);
-});
-
-// ====== הפעלת עדכון מידי פעם לבדיקה ======
-(async () => {
-  const data = await fetchSheet();
-  await updateGithub(data);
-})();
+updateJsonAndPush();
