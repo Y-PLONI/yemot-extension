@@ -1,3 +1,22 @@
 [
-  { "title": "הגדרה 33", "code": "EXT1=103310" }
+  {
+    "title": "שלוחת תפריט",
+    "code": "type=menu"
+  },
+  {
+    "title": "חדר ועידה או שידור חי",
+    "code": "type=confbridge"
+  },
+  {
+    "title": "ניתוב שיחה למספר טלפון ישראלי",
+    "code": "type=routing"
+  },
+  {
+    "title": "ביטול שמירת נקודת האזנה אחרונה",
+    "code": "save_last_play=no"
+  },
+  {
+    "title": "הפעלת קובץ בשעה מתוזמנת (שידור חי מדומה)",
+    "code": "type=playfile_time"
+  }
 ]
