@@ -1,18 +1,20 @@
 {
   "name": "my-railway-project",
   "version": "1.0.0",
-  "description": "פרויקט להרצת סקריפט שמעדכן JSON מ-Google Sheets",
+  "description": "עדכון JSON משיטס והעלאה ל-GitHub",
   "main": "main.js",
+  "type": "module",
   "scripts": {
     "start": "node main.js"
   },
   "dependencies": {
+    "simple-git": "^3.22.0",
     "node-fetch": "^3.3.2",
-    "octokit": "^2.0.12",
-    "node-cron": "^3.0.2"
-    "simple-git": "^3.21.0"
+    "csv-parse": "^5.5.6"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "author": "",
-  "license": "ISC",
-  "type": "module"
+  "license": "MIT"
 }
