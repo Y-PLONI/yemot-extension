@@ -1,14 +1,14 @@
 {
   "מודולים": [
     {
-      "title": "קבלת נתונים",
-      "code": "AAA",
-      "keywords": "קבלת, נתונים, ירחמיאל"
-    },
-    {
       "title": "תפריט",
       "code": "type=menu",
-      "keywords": "סוג שלוחה, שינוי סוג שלוחה, שלוחה"
+      "keywords": "..."
+    },
+    {
+      "title": "השמעת קבצים",
+      "code": "type=playfile",
+      "keywords": "..."
     }
   ]
 }
