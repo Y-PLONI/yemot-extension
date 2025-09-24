@@ -1,20 +1,20 @@
 {
   "name": "my-railway-project",
   "version": "1.0.0",
-  "description": "עדכון JSON משיטס והעלאה ל-GitHub",
+  "description": "פרויקט להורדת CSV מגוגל שיטס ועדכון JSON ב-GitHub",
   "main": "main.js",
   "type": "module",
   "scripts": {
     "start": "node main.js"
   },
   "dependencies": {
-    "simple-git": "^3.22.0",
     "node-fetch": "^3.3.2",
-    "csv-parse": "^5.5.6"
+    "csv-parse": "^5.4.0",
+    "@octokit/rest": "^21.0.2"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=18.0.0"
   },
   "author": "",
-  "license": "MIT"
+  "license": "ISC"
 }
