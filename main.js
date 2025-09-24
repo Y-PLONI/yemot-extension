@@ -1,55 +1,47 @@
 import fetch from "node-fetch";
 import fs from "fs";
 
-// קישור CSV פומבי מ-Google Sheets
-const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ.../pub?output=csv"; // החלף כאן בקישור הפומבי שלך
+// הקישור הפומבי ל־CSV
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSy4WReF1zzNzcvCLoFSlLIWTOzfxkFfU0q0YK_FwhzL7EWJY8d54pxJWSov-GG_oj5iCyQ_bhrRFpq/pub?output=csv";
 
-async function fetchCSV() {
+// פונקציה שמביאה את ה־CSV וממירה למערך אובייקטים
+async function fetchCSV(url) {
   try {
-    const res = await fetch(SHEET_CSV_URL);
-    if (!res.ok) throw new Error(`שגיאה ב-fetch: ${res.status}`);
-    const text = await res.text();
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`שגיאה ב-fetch: ${response.status}`);
+    const text = await response.text();
 
-    // מפצל לשורות
-    const lines = text.trim().split("\n");
-    console.log("שורות מה-CSV:", lines);
+    const lines = text.split("\n").filter(line => line.trim() !== "");
+    if (lines.length < 2) return []; // אין נתונים
 
-    if (lines.length <= 1) {
-      console.log("לא נמצאו נתונים לשמירה.");
-      return [];
-    }
-
-    const headers = lines[0].split(/,|;/); // מפריד , או ;
-    const items = [];
-
-    for (let i = 1; i < lines.length; i++) {
-      const row = lines[i].split(/,|;/);
-      // מתעלם משורות ריקות
-      if (row.every(cell => cell.trim() === "")) continue;
-
-      items.push({
-        title: row[0] || "",
-        code: row[1] || "",
-        keywords: row[2] || ""
+    const headers = lines[0].split(","); // השורה הראשונה - כותרות
+    const data = lines.slice(1).map(line => {
+      const values = line.split(",");
+      const obj = {};
+      headers.forEach((header, i) => {
+        obj[header] = values[i] || "";
       });
-    }
+      return obj;
+    });
 
-    console.log("נתונים שנמצאו:", items);
-    return items;
-
+    return data;
   } catch (err) {
     console.error("שגיאה ב-fetchCSV:", err);
     return [];
   }
 }
 
+// פונקציה ראשית
 async function main() {
-  const data = await fetchCSV();
-  if (data.length === 0) return;
+  const data = await fetchCSV(SHEET_CSV_URL);
+  if (data.length === 0) {
+    console.log("לא נמצאו נתונים לשמירה.");
+    return;
+  }
 
-  // כאן תוכל להוסיף את קוד העדכון ל-GitHub או שמירה ל־JSON
-  fs.writeFileSync("ym_items.json", JSON.stringify(data, null, 2));
-  console.log("JSON נוצר בהצלחה!");
+  // שמירה כ־JSON מקומי (או כאן אפשר להוסיף קוד לעדכון GitHub)
+  fs.writeFileSync("ym_items.json", JSON.stringify(data, null, 2), "utf-8");
+  console.log("נתונים נשמרו בהצלחה לקובץ ym_items.json");
 }
 
 main();
