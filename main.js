@@ -9,7 +9,7 @@ const REPO_NAME = "yemot-shits-24-9";
 const FILE_PATH = "ym_items.json";
 const BRANCH = "main";
 const TOKEN = process.env.GITHUB_PAT; // הכנס את ה-PAT שלך כ-ENV ב-Railway
-const FILE_SHA = "648e708dd5d56d0dbce9e68ec8debd68a32303f2";
+const FILE_SHA = "fa31416bfad75f32cdc1507915a4e6fbf20e2da2";
 
 // ====== פונקציה לקריאת CSV ======
 async function fetchCSV(url) {
