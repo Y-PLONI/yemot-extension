@@ -1,1 +1,52 @@
-[]
+[
+  {
+    "title": "function m(a){a=[\"object\"==typeof globalThis&&globalThis",
+    "code": "a",
+    "keywords": "\"object\"==typeof window&&window"
+  },
+  {
+    "title": "function q(a){var b=typeof Symbol!=\"undefined\"&&Symbol.iterator&&a[Symbol.iterator];if(b)return b.call(a);if(typeof a.length==\"number\")return{next:k(a)};throw Error(String(a)+\" is not an iterable or ArrayLike\");}p(\"Object.is\"",
+    "code": "function(a){return a?a:function(b",
+    "keywords": "c){return b===c?b!==0||1/b===1/c:b!==b&&c!==c}});"
+  },
+  {
+    "title": "p(\"Array.prototype.includes\"",
+    "code": "function(a){return a?a:function(b",
+    "keywords": "c){var d=this;d instanceof String&&(d=String(d));var e=d.length;c=c||0;for(c<0&&(c=Math.max(c+e"
+  },
+  {
+    "title": "p(\"String.prototype.includes\"",
+    "code": "function(a){return a?a:function(b",
+    "keywords": "c){if(this==null)throw new TypeError(\"The 'this' value for String.prototype.includes must not be null or undefined\");if(b instanceof RegExp)throw new TypeError(\"First argument to String.prototype.includes must not be a regular expression\");return this.indexOf(b"
+  },
+  {
+    "title": "function v(){var a=(w=Object.prototype)==null?void 0:w.__lookupGetter__(\"__proto__\")",
+    "code": "b=x",
+    "keywords": "c=y;return function(){var d=a.call(this)"
+  },
+  {
+    "title": "function z(){var a=(A=Object.prototype)==null?void 0:A.__lookupSetter__(\"__proto__\")",
+    "code": "b=x",
+    "keywords": "c=y;return function(d){d=a.call(this"
+  },
+  {
+    "title": "var D=\"constructor __defineGetter__ __defineSetter__ hasOwnProperty __lookupGetter__ __lookupSetter__ isPrototypeOf propertyIsEnumerable toString valueOf __proto__ toLocaleString x_ngfn_x\".split(\" \")",
+    "code": "E=D.concat",
+    "keywords": "F=navigator.userAgent.match(/Firefox\\/([0-9]+)\\./)"
+  },
+  {
+    "title": "function C(a",
+    "code": "b){for(var c=[]",
+    "keywords": "d=q(Object.getOwnPropertyNames(Object.prototype))"
+  },
+  {
+    "title": "(function(){var a=t()",
+    "code": "b=window.ppConfig;b&&(b.sealIsEnforced?Object.seal(Object.prototype):b.disableAllReporting||(document.readyState!==\"loading\"?B(b",
+    "keywords": "a):document.addEventListener(\"DOMContentLoaded\""
+  },
+  {
+    "title": "</script><meta name=\"description\" content=\"Online tekstverwerking",
+    "code": "presentaties en spreadsheets\"><meta name=\"viewport\" content=\"width=device-width",
+    "keywords": "initial-scale=1.0"
+  }
+]
