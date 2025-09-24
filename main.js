@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import { Octokit } from '@octokit/rest';
 
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSy4WReF1zzNzcvCLoFSlLIWTOzfxkFfU0q0YK_FwhzL7EWJY8d54pxJWSov-GG_oj5iCyQ_bhrRFpq/pub?output=csv';
-const GITHUB_TOKEN = 'PASTE_YOUR_TOKEN_HERE';
+const GITHUB_TOKEN = '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';
 const OWNER = 'mhotjrubho';
 const REPO = 'yemot-shits-24-9';
 const PATH = 'ym_items.json';
