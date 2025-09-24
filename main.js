@@ -1,79 +1,86 @@
 import fetch from 'node-fetch';
+import fs from 'fs';
 import { Octokit } from '@octokit/rest';
 
-const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSy4WReF1zzNzcvCLoFSlLIWTOzfxkFfU0q0YK_FwhzL7EWJY8d54pxJWSov-GG_oj5iCyQ_bhrRFpq/pub?output=csv';
-const GITHUB_TOKEN = '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';
-const OWNER = 'mhotjrubho';
-const REPO = 'yemot-shits-24-9';
-const PATH = 'ym_items.json';
+// קרא את הטוקן ממשתנה סביבה
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN; 
+const REPO_OWNER = 'mhotjrubho';
+const REPO_NAME = 'yemot-shits-24-9';
+const FILE_PATH = 'ym_items.json';
 const BRANCH = 'main';
 
-const octokit = new Octokit({ auth: GITHUB_TOKEN });
-
+// פונקציה לקרוא CSV משיטס
 async function fetchCSV(url) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`שגיאה ב-fetch: ${res.status}`);
-  return await res.text();
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`שגיאה ב-fetch: ${res.status}`);
+    const text = await res.text();
+    return text;
+  } catch (err) {
+    console.error('שגיאה ב-fetchCSV:', err);
+    return null;
+  }
 }
 
-function csvToJson(csv) {
-  const lines = csv.split('\n').filter(Boolean);
-  const headers = lines.shift().split(',');
-  return lines.map(line => {
+// המרת CSV ל-JSON
+function csvToJson(csvText) {
+  const lines = csvText.trim().split('\n');
+  const headers = lines.shift().split(','); // שורה ראשונה ככותרות
+  const modules = lines.map(line => {
     const cols = line.split(',');
     return {
-      title: cols[0],
-      code: cols[1],
-      keyWords: cols[2]
+      title: cols[0],       // עמודה A
+      code: cols[1],        // עמודה B
+      keywords: cols[2]     // עמודה C (פרמטרים לחיפוש)
     };
   });
+  return { מודולים: modules };
 }
 
+// עדכון הקובץ ב-GitHub
 async function updateGitHub(jsonData) {
-  const content = Buffer.from(JSON.stringify({ modules: jsonData }, null, 2)).toString('base64');
+  const octokit = new Octokit({ auth: GITHUB_TOKEN });
 
-  // מנסה למחוק קודם (אם קיים)
   try {
-    const { data } = await octokit.repos.getContent({ owner: OWNER, repo: REPO, path: PATH, ref: BRANCH });
-    await octokit.repos.delete({
-      owner: OWNER,
-      repo: REPO,
-      path: PATH,
-      sha: data.sha,
-      branch: BRANCH,
-      message: 'מחיקה לפני עדכון אוטומטי'
+    // קבל SHA של הקובץ הקיים
+    const { data: fileData } = await octokit.repos.getContent({
+      owner: REPO_OWNER,
+      repo: REPO_NAME,
+      path: FILE_PATH,
+      ref: BRANCH
     });
-    console.log('קובץ קיים נמחק.');
-  } catch (err) {
-    if (err.status === 404) console.log('אין קובץ קיים – ממשיכים.');
-    else throw err;
-  }
 
-  // יוצר מחדש
-  await octokit.repos.createOrUpdateFileContents({
-    owner: OWNER,
-    repo: REPO,
-    path: PATH,
-    branch: BRANCH,
-    message: 'עדכון JSON אוטומטי מהשיטס',
-    content
-  });
+    const sha = fileData.sha;
 
-  console.log('✅ JSON עודכן בהצלחה ב-GitHub!');
-}
+    // עדכון הקובץ
+    await octokit.repos.createOrUpdateFileContents({
+      owner: REPO_OWNER,
+      repo: REPO_NAME,
+      path: FILE_PATH,
+      message: 'עדכון JSON משיטס אוטומטי',
+      content: Buffer.from(JSON.stringify(jsonData, null, 2)).toString('base64'),
+      sha: sha,
+      branch: BRANCH
+    });
 
-async function main() {
-  try {
-    const csvText = await fetchCSV(SHEET_URL);
-    const jsonData = csvToJson(csvText);
-    if (!jsonData.length) {
-      console.log('לא נמצאו נתונים לשמירה.');
-      return;
-    }
-    await updateGitHub(jsonData);
+    console.log('✅ הקובץ עודכן בהצלחה ב-GitHub');
   } catch (err) {
     console.error('❌ שגיאה בעדכון GitHub:', err);
   }
+}
+
+async function main() {
+  const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSy4WReF1zzNzcvCLoFSlLIWTOzfxkFfU0q0YK_FwhzL7EWJY8d54pxJWSov-GG_oj5iCyQ_bhrRFpq/pub?output=csv';
+  const csvText = await fetchCSV(csvUrl);
+
+  if (!csvText) return console.error('לא נמצאו נתונים לשמירה.');
+
+  const jsonData = csvToJson(csvText);
+
+  console.log('JSON מוכן:', JSON.stringify(jsonData, null, 2));
+
+  // עדכן ב-GitHub
+  await updateGitHub(jsonData);
 }
 
 main();
