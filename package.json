@@ -1,0 +1,17 @@
+{
+  "name": "my-railway-project",
+  "version": "1.0.0",
+  "description": "פרויקט להרצת סקריפט שמעדכן JSON מ-Google Sheets",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2",
+    "octokit": "^2.0.12",
+    "node-cron": "^3.0.2"
+  },
+  "author": "",
+  "license": "ISC",
+  "type": "module"
+}
