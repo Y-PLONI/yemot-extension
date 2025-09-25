@@ -1,114 +1,498 @@
-  [
-    { "title": "תפריט", "code": "type=menu" },
-    { "title": "השמעת קבצים", "code": "type=playfile" },
-    { "title": "חדר ועידה או שידור חי", "code": "type=confbridge" },
-    { "title": "כניסה לניהול", "code": "type=admin_login" },
-    { "title": "הקלטות", "code": "type=record" },
-    { "title": "ניתוב השיחה למספרי טלפון ישראליים", "code": "type=routing" },
-    { "title": "ניתוב שיחה לפי שעות", "code": "type=routing_time" },
-    { "title": "הפניה למערכת תכנים אחרת בימות המשיח", "code": "type=routing_yemot" },
-    { "title": "השמעת הניקוד שנצבר", "code": "type=points_say_total" },
-    { "title": "חזרה להשמעה אחרונה (מודול)", "code": "type=last_play" },
-    { "title": "תא קולי השולח העתק לדואר האלקטרוני", "code": "type=voicemail_email" },
-    { "title": "הוספת מספר לרשימת תפוצה", "code": "type=template_add_number" },
-    { "title": "הסרת מספר מרשימת תפוצה", "code": "type=template_remove_number" },
-    { "title": "תפריט מקש כוכבית", "code": "type=menu_star" },
-    { "title": "הוראות הפעלה", "code": "type=message_options_menu" },
-    { "title": "התראות צבע אדום", "code": "type=oref_alerts" },
-    { "title": "הגל השקט לאזעקות", "code": "type=oref_alerts_quiet_wave" },
-    { "title": "מערכת זמני היום", "code": "type=zmanim" },
-    { "title": "שערי מטח", "code": "type=exchange_rates" },
-    { "title": "השמעת הודעה אחת בלבד", "code": "type=play_and_return" },
-    { "title": "חדר וועידה המוגבל לכמות משתמשים", "code": "type=conference_amount" },
-    { "title": "השמעת הודעה לפי תאריך (עברי/לועזי/חנוכה/עומר)", "code": "type=toplay_time" },
-    { "title": "חלוקת פרקי תהילים, גמרא, פרשות, דפים ועמודים", "code": "type=chapter_receive" },
-    { "title": "שאלות טרוויה ונכון או לא נכון", "code": "type=trivia_questions" },
-    { "title": "פתיחת וצאפפון ובלוג פון", "code": "type=open_wap_reseller_customer" },
-    { "title": "השמעת השעה כעת", "code": "type=say_hour_and_minute" },
-    { "title": "חלוקת מספרי אישורים", "code": "type=approval_number" },
-    { "title": "קבלת נתונים", "code": "type=recording_and_entering_data" },
-    { "title": "רשימות השמעה אישיות", "code": "type=phone_play_list" },
-    { "title": "פתיחת מערכת תכנים חדשה", "code": "type=create_ivr2" },
-    { "title": "הפניית השיחה למספרי 1800 ו 1801", "code": "type=routing_1800" },
-    { "title": "תפריט עם זיהוי דיבור קולי", "code": "type=menu_voice" },
-    { "title": "שליחת sms", "code": "type=sending_sms" },
-    { "title": "העברה לתיקיות אחרות לפי שעות או ימים", "code": "type=go_to_folder_time" },
-    { "title": "המרת קבצי קול לטקסט", "code": "type=stt_dir_all_file" },
-    { "title": "הוספת ניקוד", "code": "type=points_save" },
-    { "title": "ניתוק השיחה", "code": "type=hangup" },
-    { "title": "בחירת קובץ או תפריט בחירת קובץ בשלוחת השמעת קבצים", "code": "type=start_select_file" },
-    { "title": "שידור חי מדומה, מרובה קבצים (לפי זמן מוגדר)", "code": "type=playdir_time" },
-    { "title": "קבלת או שליחת מספר אישי", "code": "type=private_did_customer" },
-    { "title": "הפעלת צינתוק, ושלוחה להרשמה או הוספה מרשימת הצינתוקים", "code": "type=tzintuk" },
-    { "title": "פילטר לפי רשימות והעברה לשלוחה אחרת", "code": "type=go_to_folder_from_list_all_information" },
-    { "title": "סליקת אשראי דרך נדרים פלוס", "code": "type=nedarim_plus" },
-    { "title": "סליקת אשראי דרך פלאקארד", "code": "type=pelecard" },
-    { "title": "סליקת אשראי דרך קרדקום", "code": "type=cardcom" },
-    { "title": "מערכת מכירת מושבים", "code": "type=sale_seats" },
-    { "title": "מערכת חלוקת משניות (כולל שמיעה ודוחות)", "code": "type=chapter_receive_mishnayot_select" },
-    { "title": "מעקב לימודים", "code": "type=study_tracking" },
-    { "title": "מעבר לשלוחות שונות לפי כמות מאזינים שעברו במודול", "code": "type=go_to_folder_count" },
-    { "title": "מעבר לשלוחה אחרת", "code": "type=go_to_folder" },
-    { "title": "מוזיקה בהמתנה ושידורים חיים מערוצים שונים", "code": "type=music_on_hold" },
-    { "title": "מודל תור", "code": "type=queue" },
-    { "title": "שליחת פקס", "code": "type=send_fax" },
-    { "title": "קבלת פקס", "code": "type=recv_fax" },
-    { "title": "מודל מבחן", "code": "type=examination" },
-    { "title": "שלוחת סקר", "code": "type=seker" },
-    { "title": "מודול מעקב גיוס תרומות", "code": "type=fundraising" },
-    { "title": "מודול כמות חברים פעילים", "code": "type=members_active" },
-    { "title": "מודל חישוב מונה", "code": "type=counter_calculator" },
-    { "title": "מודל התרמות, מצינג", "code": "type=donation_campaign" },
-    { "title": "הוספת או הורדת נקודות ללקוח על ידי מנהלים", "code": "type=points_edit" },
-    { "title": "הוספה, הסרה או חסימה מתבניות רשימות התפוצה (למנהל)", "code": "type=yemot_dialer_campaign_list" },
-    { "title": "בחירת ושמירת פרק תהילים קבוע ללקוח", "code": "type=tehillim_select_save_and_listen" },
-    { "title": "הוספת ניקוד למשתמש אחר", "code": "type=points_to_other_id" },
-    { "title": "תקשור עם מחשבים וממשקי נתונים חיצוניים", "code": "type=api" },
-    { "title": "מבחן אמריקאי", "code": "type=examination_american" },
-    { "title": "כניסה לפי מפתח, הגבלת כניסות, השמעה, תפריט, הקלטה, ומעבר לתיקיה אחרת", "code": "type=key_play_set_record_go_to_foldar" },
-    { "title": "חסימת משתמש", "code": "type=block_id_type" },
-    { "title": "חלוקת קופונים", "code": "type=coupon" },
-    { "title": "התחברות למנוע סליקה כללי", "code": "type=credit_card" },
-    { "title": "השמעת נתונים והודעות אישיות", "code": "type=id_message" },
-    { "title": "השמעת הודעות ללקוח ברצף", "code": "type=id_list_message" },
-    { "title": "הקלטת הודעות מערכת בשלוחה", "code": "type=record_system_messages" },
-    { "title": "הפעלת שלוחה רנדומלית", "code": "type=folder_play_random" },
-    { "title": "הפעלת קובץ בשעה מתוזמנת (שידור חי מדומה)", "code": "type=playfile_time" },
-    { "title": "הפעלה מהירה לקמפיין", "code": "type=yemot_dialer_campaign_start" },
-    { "title": "הפניית משתמשים לשלוחות שונות לפי רשימת התפוצה", "code": "type=template_filter" },
-    { "title": "הזמנת מוצרים לפי מספר קטלוגי", "code": "type=sale_products" },
-    { "title": "הודעה יומית מתחלפת ומעבר לשלוחה אחרת", "code": "type=daily_message" },
-    { "title": "העברה לשלוחה אחרת לפי תאריך ושעה", "code": "type=go_to_folder_date" },
-    { "title": "דיווח משימות יומי", "code": "type=tasks_report" },
-    { "title": "בדיקת יתרת יחידות נמוכה או פג תוקף מתקרב", "code": "type=checking_units" },
-    { "title": "שעון נוכחות", "code": "type=time_keeper" },
-    { "title": "ניתוב שיחה למחשב חיצוני", "code": "type=routing_ip" },
-    { "title": "מודול נקודות ללקוח על קניה, ודירוג בעל העסק", "code": "type=points_and_rating" },
-    { "title": "הגבלת אורך השיחה, טיימר (כמודול נפרד)", "code": "type=limit_call_seconds" },
-    { "title": "מחשבון אחוזי תוספת", "code": "type=calculator_add_percentage" },
-    { "title": "פילטר כניסה לפי תאריך עם הגבלת כמות כניסות", "code": "type=access_filter" },
-    { "title": "המספר כעת הוא", "code": "type=number_now_is" },
-    { "title": "השמעת כמות נרשמים מתוך שלוחת קבלת נתונים", "code": "type=say_amount_subscribers" },
-    { "title": "ספירת כמות מספרי טלפון שונים שנכנסו לשלוחה", "code": "type=amount_incoming_phone_numbers" },
-    { "title": "קבלת או שליחת ניתוביה", "code": "type=nitoviya" },
-    { "title": "שמיעת מספר ניתוביה", "code": "type=nitoviya_b_say_number" },
-    { "title": "הפעלת קבצים עם קליקרים (משחק)", "code": "type=clicks" },
-    { "title": "הפעלת קבצים עם הכנסת מקשים לפי זמן", "code": "type=playfile_and_enter_digits_time" },
-    { "title": "מודול השתקת קבלת חיוגים והתראות מהמערכת", "code": "type=mute_calls" },
-    { "title": "הכנסת נתון מסוים שהוקש לקובץ INI במערכת", "code": "type=add_id_to_list" },
-    { "title": "ביטול שמירת נקודת האזנה אחרונה", "code": "save_last_play=no" },
-    { "title": "הפעלת הגבלת אורך שיחה (טיימר) בכל מודול", "code": "limit_call_seconds=yes" },
-    { "title": "שליחת הקלטה למייל", "code": "email_send=yes" },
-    { "title": "כניסת מאזינים במצב השתקה (חדר ועידה)", "code": "conf_bridge_type=listen" },
-    { "title": "שליחת צנתוק על פתיחת חדר ועידה (בכל מקרה)", "code": "conf_bridge_send_thintuk=yes" },
-    { "title": "ביטול השמעת כותרת השידור (בחדר ועידה)", "code": "title_announcement=no" },
-    { "title": "הפעלת השמעת כותרת לפי תאריך (עברי/לועזי/שעה/דקה)", "code": "play_file_date=yes" },
-    { "title": "השמעת תזכורת ספירת העומר בתפריט", "code": "omer_today_play=yes" },
-    { "title": "השמעת הודעה על האזנה אחרונה בכניסה לתפריט", "code": "menu_say_last_play=yes" },
-    { "title": "כניסה לפי מספר טלפון (זיהוי)", "code": "enter_id_type=phone" },
-    { "title": "כניסה לפי תעודת זהות (זיהוי)", "code": "enter_id_type=teudat_zehut" },
-    { "title": "כניסה לפי רשימה עם כל פרטי המשתמש (זיהוי)", "code": "enter_id_type=list_all_information" },
-    { "title": "יצירת לינק קשיח לרשימת השמעה אישית (שלא יושפע מהמקור)", "code": "hard_link=yes" },
-    { "title": "מוסיקה בהמתנה 'צמאה'", "code": "music_on_hold=ztomao" },
-    { "title": "צליל חיוג רגיל (במקום מוזיקה בהמתנה בניתוב)", "code": "music_on_hold=no" }
-  ]
+[
+    {
+        "title": "תפריט",
+        "code": "type=menu"
+    },
+    {
+        "title": "השמעת קבצים",
+        "code": "type=playfile"
+    },
+    {
+        "title": "חדר ועידה או שידור חי",
+        "code": "type=confbridge"
+    },
+    {
+        "title": "כניסה לניהול",
+        "code": "type=admin_login"
+    },
+    {
+        "title": "הקלטות",
+        "code": "type=record"
+    },
+    {
+        "title": "ניתוב השיחה למספרי טלפון ישראליים",
+        "code": "type=routing"
+    },
+    {
+        "title": "ניתוב שיחה לפי שעות",
+        "code": "type=routing_time"
+    },
+    {
+        "title": "הפניה למערכת תכנים אחרת בימות המשיח",
+        "code": "type=routing_yemot"
+    },
+    {
+        "title": "השמעת הניקוד שנצבר",
+        "code": "type=points_say_total"
+    },
+    {
+        "title": "חזרה להשמעה אחרונה (מודול)",
+        "code": "type=last_play"
+    },
+    {
+        "title": "תא קולי השולח העתק לדואר האלקטרוני",
+        "code": "type=voicemail_email"
+    },
+    {
+        "title": "הוספת מספר לרשימת תפוצה",
+        "code": "type=template_add_number"
+    },
+    {
+        "title": "הסרת מספר מרשימת תפוצה",
+        "code": "type=template_remove_number"
+    },
+    {
+        "title": "תפריט מקש כוכבית",
+        "code": "type=menu_star"
+    },
+    {
+        "title": "הוראות הפעלה",
+        "code": "type=message_options_menu"
+    },
+    {
+        "title": "התראות צבע אדום",
+        "code": "type=oref_alerts"
+    },
+    {
+        "title": "הגל השקט לאזעקות",
+        "code": "type=oref_alerts_quiet_wave"
+    },
+    {
+        "title": "מערכת זמני היום",
+        "code": "type=zmanim"
+    },
+    {
+        "title": "שערי מטח",
+        "code": "type=exchange_rates"
+    },
+    {
+        "title": "השמעת הודעה אחת בלבד",
+        "code": "type=play_and_return"
+    },
+    {
+        "title": "חדר וועידה המוגבל לכמות משתמשים",
+        "code": "type=conference_amount"
+    },
+    {
+        "title": "השמעת הודעה לפי תאריך (עברי/לועזי/חנוכה/עומר)",
+        "code": "type=toplay_time"
+    },
+    {
+        "title": "חלוקת פרקי תהילים, גמרא, פרשות, דפים ועמודים",
+        "code": "type=chapter_receive"
+    },
+    {
+        "title": "שאלות טרוויה ונכון או לא נכון",
+        "code": "type=trivia_questions"
+    },
+    {
+        "title": "פתיחת וצאפפון ובלוג פון",
+        "code": "type=open_wap_reseller_customer"
+    },
+    {
+        "title": "השמעת השעה כעת",
+        "code": "type=say_hour_and_minute"
+    },
+    {
+        "title": "חלוקת מספרי אישורים",
+        "code": "type=approval_number"
+    },
+    {
+        "title": "קבלת נתונים",
+        "code": "type=recording_and_entering_data"
+    },
+    {
+        "title": "רשימות השמעה אישיות",
+        "code": "type=phone_play_list"
+    },
+    {
+        "title": "פתיחת מערכת תכנים חדשה",
+        "code": "type=create_ivr2"
+    },
+    {
+        "title": "הפניית השיחה למספרי 1800 ו 1801",
+        "code": "type=routing_1800"
+    },
+    {
+        "title": "תפריט עם זיהוי דיבור קולי",
+        "code": "type=menu_voice"
+    },
+    {
+        "title": "שליחת sms",
+        "code": "type=sending_sms"
+    },
+    {
+        "title": "העברה לתיקיות אחרות לפי שעות או ימים",
+        "code": "type=go_to_folder_time"
+    },
+    {
+        "title": "המרת קבצי קול לטקסט",
+        "code": "type=stt_dir_all_file"
+    },
+    {
+        "title": "הוספת ניקוד",
+        "code": "type=points_save"
+    },
+    {
+        "title": "ניתוק השיחה",
+        "code": "type=hangup"
+    },
+    {
+        "title": "בחירת קובץ או תפריט בחירת קובץ בשלוחת השמעת קבצים",
+        "code": "type=start_select_file"
+    },
+    {
+        "title": "שידור חי מדומה, מרובה קבצים (לפי זמן מוגדר)",
+        "code": "type=playdir_time"
+    },
+    {
+        "title": "קבלת או שליחת מספר אישי",
+        "code": "type=private_did_customer"
+    },
+    {
+        "title": "הפעלת צינתוק, ושלוחה להרשמה או הוספה מרשימת הצינתוקים",
+        "code": "type=tzintuk"
+    },
+    {
+        "title": "פילטר לפי רשימות והעברה לשלוחה אחרת",
+        "code": "type=go_to_folder_from_list_all_information"
+    },
+    {
+        "title": "סליקת אשראי דרך נדרים פלוס",
+        "code": "type=nedarim_plus"
+    },
+    {
+        "title": "סליקת אשראי דרך פלאקארד",
+        "code": "type=pelecard"
+    },
+    {
+        "title": "סליקת אשראי דרך קרדקום",
+        "code": "type=cardcom"
+    },
+    {
+        "title": "מערכת מכירת מושבים",
+        "code": "type=sale_seats"
+    },
+    {
+        "title": "מערכת חלוקת משניות (כולל שמיעה ודוחות)",
+        "code": "type=chapter_receive_mishnayot_select"
+    },
+    {
+        "title": "מעקב לימודים",
+        "code": "type=study_tracking"
+    },
+    {
+        "title": "מעבר לשלוחות שונות לפי כמות מאזינים שעברו במודול",
+        "code": "type=go_to_folder_count"
+    },
+    {
+        "title": "מעבר לשלוחה אחרת",
+        "code": "type=go_to_folder"
+    },
+    {
+        "title": "מוזיקה בהמתנה ושידורים חיים מערוצים שונים",
+        "code": "type=music_on_hold"
+    },
+    {
+        "title": "מודל תור",
+        "code": "type=queue"
+    },
+    {
+        "title": "שליחת פקס",
+        "code": "type=send_fax"
+    },
+    {
+        "title": "קבלת פקס",
+        "code": "type=recv_fax"
+    },
+    {
+        "title": "מודל מבחן",
+        "code": "type=examination"
+    },
+    {
+        "title": "שלוחת סקר",
+        "code": "type=seker"
+    },
+    {
+        "title": "מודול מעקב גיוס תרומות",
+        "code": "type=fundraising"
+    },
+    {
+        "title": "מודול כמות חברים פעילים",
+        "code": "type=members_active"
+    },
+    {
+        "title": "מודל חישוב מונה",
+        "code": "type=counter_calculator"
+    },
+    {
+        "title": "מודל התרמות, מצינג",
+        "code": "type=donation_campaign"
+    },
+    {
+        "title": "הוספת או הורדת נקודות ללקוח על ידי מנהלים",
+        "code": "type=points_edit"
+    },
+    {
+        "title": "הוספה, הסרה או חסימה מתבניות רשימות התפוצה (למנהל)",
+        "code": "type=yemot_dialer_campaign_list"
+    },
+    {
+        "title": "בחירת ושמירת פרק תהילים קבוע ללקוח",
+        "code": "type=tehillim_select_save_and_listen"
+    },
+    {
+        "title": "הוספת ניקוד למשתמש אחר",
+        "code": "type=points_to_other_id"
+    },
+    {
+        "title": "תקשור עם מחשבים וממשקי נתונים חיצוניים",
+        "code": "type=api"
+    },
+    {
+        "title": "מבחן אמריקאי",
+        "code": "type=examination_american"
+    },
+    {
+        "title": "כניסה לפי מפתח, הגבלת כניסות, השמעה, תפריט, הקלטה, ומעבר לתיקיה אחרת",
+        "code": "type=key_play_set_record_go_to_foldar"
+    },
+    {
+        "title": "חסימת משתמש",
+        "code": "type=block_id_type"
+    },
+    {
+        "title": "חלוקת קופונים",
+        "code": "type=coupon"
+    },
+    {
+        "title": "התחברות למנוע סליקה כללי",
+        "code": "type=credit_card"
+    },
+    {
+        "title": "השמעת נתונים והודעות אישיות",
+        "code": "type=id_message"
+    },
+    {
+        "title": "השמעת הודעות ללקוח ברצף",
+        "code": "type=id_list_message"
+    },
+    {
+        "title": "הקלטת הודעות מערכת בשלוחה",
+        "code": "type=record_system_messages"
+    },
+    {
+        "title": "הפעלת שלוחה רנדומלית",
+        "code": "type=folder_play_random"
+    },
+    {
+        "title": "הפעלת קובץ בשעה מתוזמנת (שידור חי מדומה)",
+        "code": "type=playfile_time"
+    },
+    {
+        "title": "הפעלה מהירה לקמפיין",
+        "code": "type=yemot_dialer_campaign_start"
+    },
+    {
+        "title": "הפניית משתמשים לשלוחות שונות לפי רשימת התפוצה",
+        "code": "type=template_filter"
+    },
+    {
+        "title": "הזמנת מוצרים לפי מספר קטלוגי",
+        "code": "type=sale_products"
+    },
+    {
+        "title": "הודעה יומית מתחלפת ומעבר לשלוחה אחרת",
+        "code": "type=daily_message"
+    },
+    {
+        "title": "העברה לשלוחה אחרת לפי תאריך ושעה",
+        "code": "type=go_to_folder_date"
+    },
+    {
+        "title": "דיווח משימות יומי",
+        "code": "type=tasks_report"
+    },
+    {
+        "title": "בדיקת יתרת יחידות נמוכה או פג תוקף מתקרב",
+        "code": "type=checking_units"
+    },
+    {
+        "title": "שעון נוכחות",
+        "code": "type=time_keeper"
+    },
+    {
+        "title": "ניתוב שיחה למחשב חיצוני",
+        "code": "type=routing_ip"
+    },
+    {
+        "title": "מודול נקודות ללקוח על קניה, ודירוג בעל העסק",
+        "code": "type=points_and_rating"
+    },
+    {
+        "title": "הגבלת אורך השיחה, טיימר (כמודול נפרד)",
+        "code": "type=limit_call_seconds"
+    },
+    {
+        "title": "מחשבון אחוזי תוספת",
+        "code": "type=calculator_add_percentage"
+    },
+    {
+        "title": "פילטר כניסה לפי תאריך עם הגבלת כמות כניסות",
+        "code": "type=access_filter"
+    },
+    {
+        "title": "המספר כעת הוא",
+        "code": "type=number_now_is"
+    },
+    {
+        "title": "השמעת כמות נרשמים מתוך שלוחת קבלת נתונים",
+        "code": "type=say_amount_subscribers"
+    },
+    {
+        "title": "ספירת כמות מספרי טלפון שונים שנכנסו לשלוחה",
+        "code": "type=amount_incoming_phone_numbers"
+    },
+    {
+        "title": "קבלת או שליחת ניתוביה",
+        "code": "type=nitoviya"
+    },
+    {
+        "title": "שמיעת מספר ניתוביה",
+        "code": "type=nitoviya_b_say_number"
+    },
+    {
+        "title": "הפעלת קבצים עם קליקרים (משחק)",
+        "code": "type=clicks"
+    },
+    {
+        "title": "הפעלת קבצים עם הכנסת מקשים לפי זמן",
+        "code": "type=playfile_and_enter_digits_time"
+    },
+    {
+        "title": "מודול השתקת קבלת חיוגים והתראות מהמערכת",
+        "code": "type=mute_calls"
+    },
+    {
+        "title": "הכנסת נתון מסוים שהוקש לקובץ INI במערכת",
+        "code": "type=add_id_to_list"
+    },
+    {
+        "title": "ביטול שמירת נקודת האזנה אחרונה",
+        "code": "save_last_play=no"
+    },
+    {
+        "title": "הפעלת הגבלת אורך שיחה (טיימר) בכל מודול",
+        "code": "limit_call_seconds=yes"
+    },
+    {
+        "title": "שליחת הקלטה למייל",
+        "code": "email_send=yes"
+    },
+    {
+        "title": "כניסת מאזינים במצב השתקה (חדר ועידה)",
+        "code": "conf_bridge_type=listen"
+    },
+    {
+        "title": "שליחת צנתוק על פתיחת חדר ועידה (בכל מקרה)",
+        "code": "conf_bridge_send_thintuk=yes"
+    },
+    {
+        "title": "ביטול השמעת כותרת השידור (בחדר ועידה)",
+        "code": "title_announcement=no"
+    },
+    {
+        "title": "הפעלת השמעת כותרת לפי תאריך (עברי/לועזי/שעה/דקה)",
+        "code": "play_file_date=yes"
+    },
+    {
+        "title": "השמעת תזכורת ספירת העומר בתפריט",
+        "code": "omer_today_play=yes"
+    },
+    {
+        "title": "השמעת הודעה על האזנה אחרונה בכניסה לתפריט",
+        "code": "menu_say_last_play=yes"
+    },
+    {
+        "title": "כניסה לפי מספר טלפון (זיהוי)",
+        "code": "enter_id_type=phone"
+    },
+    {
+        "title": "כניסה לפי תעודת זהות (זיהוי)",
+        "code": "enter_id_type=teudat_zehut"
+    },
+    {
+        "title": "כניסה לפי רשימה עם כל פרטי המשתמש (זיהוי)",
+        "code": "enter_id_type=list_all_information"
+    },
+    {
+        "title": "יצירת לינק קשיח לרשימת השמעה אישית (שלא יושפע מהמקור)",
+        "code": "hard_link=yes"
+    },
+    {
+        "title": "מוסיקה בהמתנה 'צמאה'",
+        "code": "music_on_hold=ztomao"
+    },
+    {
+        "title": "צליל חיוג רגיל (במקום מוזיקה בהמתנה בניתוב)",
+        "code": "music_on_hold=no"
+    },
+    {
+        "title": "הגדרת סדר השמעת קבצים מהישן לחדש (גלובלי או לשלוחה)",
+        "code": "start=min"
+    },
+    {
+        "title": "איפוס סדר השמעת קבצים לברירת מחדל",
+        "code": "start="
+    },
+    {
+        "title": "מעבר לשלוחה אחרת בסיום המודול",
+        "code": "end_goto=/X/Y"
+    },
+    {
+        "title": "ניתוק השיחה בסיום המודול",
+        "code": "end_goto=hangup"
+    },
+    {
+        "title": "הגבלת אורך שיחה (בשניות, לדוגמה 180 שניות)",
+        "code": "limit_call_seconds=180"
+    },
+    {
+        "title": "מניעת דילוג על הודעת ברוכים הבאים (M0000)",
+        "code": "M0000_no_skip=yes"
+    },
+    {
+        "title": "שמירת נתוני האזנה לפי משתמש (דורש זיהוי אישי)",
+        "code": "playfile_log_listen=yes"
+    },
+    {
+        "title": "הסתרת עמודה בדוחות (דוגמה לעמודה Date)",
+        "code": "Date=_hidden"
+    },
+    {
+        "title": "הגדרת שם חדש לטבלה בדוחות (דוגמה לקובץ abc)",
+        "code": "abc=שם הטבלה הרצוי"
+    },
+    {
+        "title": "שליחת הודעת טלגרם בכניסה לשלוחה (עם תוכן)",
+        "code": "telegram_send_text=תוכן ההודעה"
+    },
+    {
+        "title": "הגדרת מזהה קבוצת טלגרם לשליחת הודעות",
+        "code": "telegram_group_id=XXXXX"
+    },
+    {
+        "title": "מעבר או ניתוק שיחה לאחר סיום הסרת מספר מרשימת תפוצה (דוגמה: ביטול שאלה לאישור)",
+        "code": "remove_ask_ok=no"
+    }
+]
