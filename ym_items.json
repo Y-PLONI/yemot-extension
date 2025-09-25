@@ -1,5 +1,4 @@
-{
-    [
+  [
     { "title": "תפריט", "code": "type=menu" },
     { "title": "השמעת קבצים", "code": "type=playfile" },
     { "title": "חדר ועידה או שידור חי", "code": "type=confbridge" },
@@ -113,4 +112,3 @@
     { "title": "מוסיקה בהמתנה 'צמאה'", "code": "music_on_hold=ztomao" },
     { "title": "צליל חיוג רגיל (במקום מוזיקה בהמתנה בניתוב)", "code": "music_on_hold=no" }
   ]
-}
