@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "YM Helper - Side Panel",
+  "version": "1.3.1",
+  "description": "תוסף עזר ל־YM: חלונית צד לשמירה, עריכה והעתקה של הגדרות ל־EXT",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://*.call2all.co.il/*",
+    "http://*.call2all.co.il/*",
+    "https://raw.githubusercontent.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "YM Helper"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.call2all.co.il/*",
+        "http://*.call2all.co.il/*"
+      ],
+      "js": ["content.js"],
+      "css": ["content.css"]
+    }
+  ]
+}
