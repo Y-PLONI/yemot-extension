@@ -1,0 +1,187 @@
+:root{
+  --panel-width: 420px;
+  --panel-width-mobile: 100%;
+  --accent: #276ef1;
+  --bg: #ffffff;
+  --muted: #6b6b6b;
+  --radius: 12px;
+  --shadow: 0 8px 30px rgba(20,20,30,0.12);
+  --gap: 12px;
+  font-family: "Arial", "Helvetica", sans-serif;
+}
+
+/* הכל בכיוון RTL */
+html[dir="rtl"], body[dir="rtl"], .ym-side-panel { direction: rtl; }
+
+/* כפתור צף בתחתית שמאל */
+.ym-fab {
+  position: fixed;
+  left: 14px;
+  bottom: 18px;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #fff 0%, #f1f5ff 100%);
+  color: #111;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  cursor: pointer;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+/* אייקון + טקסט קטן בתוך הכפתור (ניתן לשים SVG) */
+.ym-fab span { font-size: 20px; }
+
+/* החלונית הצדית */
+.ym-side-panel {
+  position: fixed;
+  left: -1 * var(--panel-width);
+  top: 0;
+  bottom: 0;
+  width: var(--panel-width);
+  max-width: 100%;
+  background: var(--bg);
+  z-index: 999998;
+  box-shadow: var(--shadow);
+  border-radius: 0 12px 12px 0;
+  transform: translateX(-100%);
+  transition: transform 260ms cubic-bezier(.2,.9,.2,1);
+  overflow-y: auto;
+  padding: 18px;
+  box-sizing: border-box;
+}
+
+/* כשהחלונית פתוחה */
+.ym-side-panel.open {
+  transform: translateX(0);
+}
+
+/* כותרת ראשית */
+.ym-panel-header {
+  display:flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.ym-panel-header h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #222;
+}
+
+/* תיאור קטן */
+.ym-panel-sub {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+/* אזור הגדרות */
+.ym-settings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+/* שורה של שדה + תיאור */
+.ym-field {
+  display:flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* תיבה ליד כפתור פעולה */
+.ym-row {
+  display:flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap; /* מונע חפיפה במובייל */
+}
+
+/* תיבות קלט וכפתורים */
+.ym-input, .ym-textarea {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #e1e1e1;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  background: #fafafa;
+  resize: vertical;
+}
+
+/* כפתורים קטנים */
+.ym-btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+  font-size: 13px;
+  box-shadow: 0 4px 14px rgba(39,110,241,0.18);
+}
+
+/* כפתור משנה */
+.ym-btn.ghost {
+  background: transparent;
+  border: 1px solid #ddd;
+  color: #333;
+}
+
+/* התיבה שאוספת את כל ההגדרות ל־EXT */
+.ym-export-area {
+  width: 100%;
+  min-height: 110px;
+  max-height: 240px;
+  overflow:auto;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.03);
+}
+
+/* כפתור עליון לסגירה */
+.ym-close {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--muted);
+}
+
+/* tooltip פשוט מותאם */
+.ym-tooltip {
+  position: absolute;
+  background: rgba(30,30,30,0.95);
+  color: #fff;
+  padding: 7px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  z-index: 1000000;
+  pointer-events: none;
+  white-space: nowrap;
+  transform: translateY(-8px);
+}
+
+/* Footer קטן */
+.ym-panel-footer {
+  margin-top: 14px;
+  display:flex;
+  gap:8px;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* התאמות לרספונסיביות */
+@media (max-width: 600px) {
+  :root { --panel-width: var(--panel-width-mobile); }
+  .ym-side-panel { border-radius: 0; left: 0; }
+  .ym-fab { left: 10px; bottom: 10px; width: 44px; height: 44px; }
+  .ym-panel-header h2 { font-size: 16px; }
+}
+
+/* כמה שורות קטנות של עזר */
+.ym-hint { color: var(--muted); font-size: 12px; }
