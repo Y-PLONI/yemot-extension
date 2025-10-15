@@ -1,0 +1,442 @@
+{
+  "version": "1.0.0",
+  "lastUpdate": "2025-10-15",
+  "description": "סכמת הגדרות מלאה למערכת ימות המשיח - תומך בכל המודולים והפקודות",
+  
+  "modules": {
+    "general": {
+      "name": "הגדרות כלליות",
+      "description": "הגדרות שאינן תלויות במודול ספציפי",
+      "settings": [
+        {
+          "key": "title",
+          "description": "כותרת השלוחה",
+          "type": "text",
+          "required": false,
+          "example": "title=ברוכים הבאים למערכת"
+        },
+        {
+          "key": "start",
+          "description": "שלוחת התחלה של המערכת",
+          "type": "folder",
+          "required": false,
+          "values": ["min", "max", "/", "/<path>"],
+          "example": "start=min"
+        },
+        {
+          "key": "go_to_folder",
+          "description": "מעבר לתיקייה אחרת",
+          "type": "folder",
+          "required": false,
+          "values": ["/", "/<path>", ".", "..", "../..", "hangup"],
+          "example": "go_to_folder=/1/1"
+        },
+        {
+          "key": "password",
+          "description": "הגדרת סיסמה לשלוחה",
+          "type": "text",
+          "required": false,
+          "example": "password=1234"
+        },
+        {
+          "key": "language",
+          "description": "שפת המערכת",
+          "type": "enum",
+          "required": false,
+          "values": ["he", "en", "ar", "es", "de", "de1", "fr", "ru", "am", "wap"],
+          "default": "he",
+          "example": "language=he"
+        },
+        {
+          "key": "voice",
+          "description": "בחירת קול TTS",
+          "type": "enum",
+          "required": false,
+          "values": ["Elik_2100", "Jacob", "ymMale", "Sivan", "Osnat", "ymFemale"],
+          "example": "voice=Elik_2100"
+        },
+        {
+          "key": "rate",
+          "description": "מהירות דיבור TTS",
+          "type": "number",
+          "required": false,
+          "range": [-10, 10],
+          "example": "rate=0"
+        }
+      ]
+    },
+    
+    "menu": {
+      "name": "תפריט",
+      "description": "מודול תפריט בסיסי",
+      "type_value": "menu",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול תפריט",
+          "type": "fixed",
+          "required": true,
+          "value": "menu",
+          "example": "type=menu"
+        },
+        {
+          "key": "digits",
+          "description": "מספר ספרות לשלוחה",
+          "type": "number",
+          "required": false,
+          "range": [1, 9],
+          "default": 1,
+          "example": "digits=2"
+        },
+        {
+          "key": "timeout",
+          "description": "זמן המתנה בשניות",
+          "type": "number",
+          "required": false,
+          "default": 5,
+          "example": "timeout=10"
+        }
+      ]
+    },
+    
+    "api": {
+      "name": "API",
+      "description": "מודול API - חיבור לשרתים חיצוניים",
+      "type_value": "api",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול API",
+          "type": "fixed",
+          "required": true,
+          "value": "api",
+          "example": "type=api"
+        },
+        {
+          "key": "api_link",
+          "description": "כתובת URL של ה-API",
+          "type": "url",
+          "required": true,
+          "example": "api_link=https://example.com/api"
+        },
+        {
+          "key": "api_call_id_send",
+          "description": "שליחת מזהה שיחה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "api_call_id_send=no"
+        },
+        {
+          "key": "api_hangup_send",
+          "description": "שליחת אירוע ניתוק",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "api_hangup_send=no"
+        },
+        {
+          "key": "api_did_send",
+          "description": "שליחת מספר המחויג (DID)",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "api_did_send=no"
+        },
+        {
+          "key": "api_extension_send",
+          "description": "שליחת מספר השלוחה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "api_extension_send=no"
+        },
+        {
+          "key": "api_enter_id_send",
+          "description": "שליחת מזהה שהוקש",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "api_enter_id_send=no"
+        },
+        {
+          "key": "api_###",
+          "description": "הגדרת שדה קלט דינמי (### = מספר סידורי 000-999)",
+          "type": "dynamic",
+          "required": false,
+          "pattern": "^api_\\d{3}$",
+          "format": "name,required,message,record,digits,type",
+          "example": "api_000=library_ver,yes,,,4,Number"
+        }
+      ]
+    },
+    
+    "playfile": {
+      "name": "השמעת קבצים",
+      "description": "מודול השמעת קבצי שמע",
+      "type_value": "playfile",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול השמעת קבצים",
+          "type": "fixed",
+          "required": true,
+          "value": "playfile",
+          "example": "type=playfile"
+        },
+        {
+          "key": "folder_to_play",
+          "description": "נתיב לתיקיית הקבצים להשמעה",
+          "type": "folder",
+          "required": false,
+          "example": "folder_to_play=/recordings"
+        }
+      ]
+    },
+    
+    "read": {
+      "name": "קריאה (קבלת נתונים)",
+      "description": "מודול קריאת נתונים",
+      "type_value": "read",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול קריאה",
+          "type": "fixed",
+          "required": true,
+          "value": "read",
+          "example": "type=read"
+        }
+      ]
+    },
+    
+    "getdigits": {
+      "name": "קבלת הקשות",
+      "description": "מודול קבלת הקשות מהמשתמש",
+      "type_value": "getdigits",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול קבלת הקשות",
+          "type": "fixed",
+          "required": true,
+          "value": "getdigits",
+          "example": "type=getdigits"
+        }
+      ]
+    },
+    
+    "record": {
+      "name": "הקלטה",
+      "description": "מודול הקלטת הודעות",
+      "type_value": "record",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול הקלטה",
+          "type": "fixed",
+          "required": true,
+          "value": "record",
+          "example": "type=record"
+        }
+      ]
+    },
+    
+    "send_email": {
+      "name": "שליחת מייל",
+      "description": "מודול שליחת הודעות מייל",
+      "type_value": "send_email",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול שליחת מייל",
+          "type": "fixed",
+          "required": true,
+          "value": "send_email",
+          "example": "type=send_email"
+        }
+      ]
+    },
+    
+    "send_sms": {
+      "name": "שליחת SMS",
+      "description": "מודול שליחת הודעות SMS",
+      "type_value": "send_sms",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול שליחת SMS",
+          "type": "fixed",
+          "required": true,
+          "value": "send_sms",
+          "example": "type=send_sms"
+        }
+      ]
+    },
+
+    "say_dialing_number": {
+      "name": "השמעת המספר של המתקשר",
+      "description": "מודול המקריא למאזין את המספר שלו או מציג אותו ב-TTS",
+      "type_value": "say_dialing_number",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול",
+          "type": "fixed",
+          "required": true,
+          "value": "say_dialing_number",
+          "example": "type=say_dialing_number"
+        }
+      ]
+    },
+    
+    "conf_bridge": {
+      "name": "חדר ועידה / שידור חי",
+      "description": "מודול חדר ועידה רב-משתתפים או שידור חי",
+      "type_value": "conf_bridge",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול",
+          "type": "fixed",
+          "required": true,
+          "value": "conf_bridge",
+          "example": "type=conf_bridge"
+        }
+      ]
+    },
+    
+    "queue": {
+      "name": "מודול תור",
+      "description": "מודול לניהול תור המתנה למענה אנושי (Routing)",
+      "type_value": "queue",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול",
+          "type": "fixed",
+          "required": true,
+          "value": "queue",
+          "example": "type=queue"
+        }
+      ]
+    },
+    
+    "routing": {
+      "name": "ראוטינג - הפניית שיחות",
+      "description": "מודול הפניית שיחה לטלפון חיצוני או למערכת אחרת",
+      "type_value": "routing",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול",
+          "type": "fixed",
+          "required": true,
+          "value": "routing",
+          "example": "type=routing"
+        }
+      ]
+    },
+    
+    "survey": {
+      "name": "סקר / מבחן",
+      "description": "מודול סקר טריויה או מבחן אמריקאי",
+      "type_value": "survey",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול",
+          "type": "fixed",
+          "required": true,
+          "value": "survey",
+          "example": "type=survey"
+        }
+      ]
+    },
+    
+    "fax": {
+      "name": "קבלת / שליחת פקס",
+      "description": "מודול לשליחה או קבלה של מסמכי פקס",
+      "type_value": "fax",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול",
+          "type": "fixed",
+          "required": true,
+          "value": "fax",
+          "example": "type=fax"
+        }
+      ]
+    },
+    
+    "tzintuk": {
+      "name": "צינתוקים",
+      "description": "מודול ניהול רשימת צינתוקים (Callback)",
+      "type_value": "tzintuk",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול",
+          "type": "fixed",
+          "required": true,
+          "value": "tzintuk",
+          "example": "type=tzintuk"
+        }
+      ]
+    },
+    
+    "campaign": {
+      "name": "קמפיין",
+      "description": "מודול לניהול רשימת תפוצה וקמפיינים יוצאים",
+      "type_value": "campaign",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול",
+          "type": "fixed",
+          "required": true,
+          "value": "campaign",
+          "example": "type=campaign"
+        }
+      ]
+    },
+    
+    "billing": {
+      "name": "סליקת אשראי / תרומות",
+      "description": "מודול לביצוע תשלומים וסליקת אשראי",
+      "type_value": "billing",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול",
+          "type": "fixed",
+          "required": true,
+          "value": "billing",
+          "example": "type=billing"
+        }
+      ]
+    },
+
+    "presence_clock": {
+      "name": "שעון נוכחות",
+      "description": "מודול דיווח כניסה ויציאה (שעון נוכחות)",
+      "type_value": "presence_clock",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול",
+          "type": "fixed",
+          "required": true,
+          "value": "presence_clock",
+          "example": "type=presence_clock"
+        }
+      ]
+    }
+  }
+}

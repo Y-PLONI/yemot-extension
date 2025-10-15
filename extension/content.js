@@ -664,3 +664,543 @@
   });
 })();
 
+// YM IDE Module — תמיכת IDE לעריכת EXT.INI
+(function YMIDEModule() {
+  'use strict';
+
+  const SCHEMA_URL = 'https://raw.githubusercontent.com/Y-PLONI/yemot-extension/main/ym_settings_schema.json';
+  let SCHEMA = null;
+  let VALIDATION_ENABLED = false;
+
+  // סכימה מוטמעת (כברירת מחדל עד שנעלה ל-GitHub)
+  const EMBEDDED_SCHEMA = {
+    "version": "1.0.0",
+    "lastUpdate": "2025-10-15",
+    "modules": {
+      "general": {
+        "name": "הגדרות כלליות",
+        "description": "הגדרות שאינן תלויות במודול ספציפי",
+        "settings": [
+          {"key": "title", "description": "כותרת השלוחה", "type": "text", "required": false, "example": "title=ברוכים הבאים"},
+          {"key": "password", "description": "סיסמה לשלוחה", "type": "text", "required": false, "example": "password=1234"},
+          {"key": "language", "description": "שפת המערכת", "type": "enum", "required": false, "values": ["he", "en", "ar"], "default": "he", "example": "language=he"}
+        ]
+      },
+      "menu": {
+        "name": "תפריט",
+        "description": "מודול תפריט בסיסי",
+        "type_value": "menu",
+        "settings": [
+          {"key": "type", "description": "הגדרת מודול", "type": "fixed", "required": true, "value": "menu", "example": "type=menu"},
+          {"key": "digits", "description": "מספר ספרות", "type": "number", "required": false, "range": [1, 9], "example": "digits=2"}
+        ]
+      },
+      "api": {
+        "name": "API",
+        "description": "חיבור לשרתים חיצוניים",
+        "type_value": "api",
+        "settings": [
+          {"key": "type", "description": "הגדרת מודול API", "type": "fixed", "required": true, "value": "api", "example": "type=api"},
+          {"key": "api_link", "description": "כתובת URL של ה-API", "type": "url", "required": true, "example": "api_link=https://example.com/api"},
+          {"key": "api_call_id_send", "description": "שליחת מזהה שיחה", "type": "enum", "required": false, "values": ["yes", "no"], "default": "no", "example": "api_call_id_send=no"}
+        ]
+      }
+    }
+  };
+
+  // טעינת הסכימה - תחילה מוטמעת, אז מ-GitHub
+  async function loadSchema() {
+    try {
+      const response = await fetch(SCHEMA_URL);
+      SCHEMA = await response.json();
+      console.log('✅ YM IDE Schema loaded from GitHub');
+      return true;
+    } catch (error) {
+      console.warn('⚠️  Failed to load from GitHub, using embedded schema');
+      SCHEMA = EMBEDDED_SCHEMA;
+      console.log('✅ YM IDE Schema loaded (embedded)');
+      return true;
+    }
+  }
+
+  // פרסור תוכן EXT.INI
+  function parseExtIni(content) {
+    const lines = content.split('\n');
+    const parsed = {
+      module: null,
+      settings: {},
+      errors: [],
+      warnings: [],
+      lineInfo: []
+    };
+
+    let currentModule = 'general';
+    let lineNumber = 0;
+
+    for (const rawLine of lines) {
+      lineNumber++;
+      const line = rawLine.trim();
+      
+      const lineInfo = {
+        number: lineNumber,
+        raw: rawLine,
+        trimmed: line,
+        type: 'empty',
+        key: null,
+        value: null,
+        module: currentModule
+      };
+
+      if (!line) {
+        parsed.lineInfo.push(lineInfo);
+        continue;
+      }
+
+      if (line.startsWith(';') || line.startsWith('//')) {
+        lineInfo.type = 'comment';
+        parsed.lineInfo.push(lineInfo);
+        continue;
+      }
+
+      if (line.includes('=')) {
+        const equalIndex = line.indexOf('=');
+        const key = line.substring(0, equalIndex).trim();
+        const value = line.substring(equalIndex + 1).trim();
+
+        lineInfo.type = 'setting';
+        lineInfo.key = key;
+        lineInfo.value = value;
+
+        if (key === 'type') {
+          currentModule = value;
+          parsed.module = value;
+          lineInfo.module = value;
+        }
+
+        parsed.settings[key] = value;
+        parsed.lineInfo.push(lineInfo);
+        continue;
+      }
+
+      lineInfo.type = 'unknown';
+      parsed.errors.push({
+        line: lineNumber,
+        message: 'שורה לא מזוהה - צריך להיות בפורמט key=value',
+        severity: 'error'
+      });
+      parsed.lineInfo.push(lineInfo);
+    }
+
+    return parsed;
+  }
+
+  // ולידציה של הגדרות מול הסכימה
+  function validateSettings(parsed) {
+    if (!SCHEMA || !parsed.module) return parsed;
+
+    const moduleSchema = SCHEMA.modules[parsed.module] || SCHEMA.modules.general;
+    if (!moduleSchema) {
+      parsed.errors.push({
+        line: 0,
+        message: `מודול לא מוכר: ${parsed.module}`,
+        severity: 'error'
+      });
+      return parsed;
+    }
+
+    for (const lineInfo of parsed.lineInfo) {
+      if (lineInfo.type !== 'setting') continue;
+
+      const settingDef = moduleSchema.settings.find(s => s.key === lineInfo.key);
+      
+      if (!settingDef) {
+        parsed.errors.push({
+          line: lineInfo.number,
+          message: `הגדרה לא מוכרת: ${lineInfo.key}`,
+          severity: 'error',
+          key: lineInfo.key
+        });
+        continue;
+      }
+
+      if (settingDef.type === 'enum' && settingDef.values) {
+        if (!settingDef.values.includes(lineInfo.value)) {
+          parsed.errors.push({
+            line: lineInfo.number,
+            message: `ערך לא תקין. ערכים אפשריים: ${settingDef.values.join(', ')}`,
+            severity: 'error',
+            key: lineInfo.key
+          });
+        }
+      }
+    }
+
+    return parsed;
+  }
+
+  // קבלת הצעות השלמה חכמות
+  function getSmartSuggestions(parsed) {
+    if (!SCHEMA) return [];
+
+    const suggestions = [];
+    const currentModule = parsed.module || 'general';
+    const moduleSchema = SCHEMA.modules[currentModule];
+    
+    if (!moduleSchema) return suggestions;
+
+    for (const settingDef of moduleSchema.settings) {
+      if (settingDef.key === 'type') continue;
+      
+      if (!parsed.settings[settingDef.key]) {
+        suggestions.push({
+          key: settingDef.key,
+          value: settingDef.default || settingDef.example || '',
+          description: settingDef.description,
+          required: settingDef.required || false,
+          priority: settingDef.required ? 100 : 50
+        });
+      }
+    }
+
+    suggestions.sort((a, b) => b.priority - a.priority);
+    return suggestions;
+  }
+
+  // אתחול
+  async function initialize() {
+    console.log('🚀 YM IDE Module initializing...');
+    
+    const schemaLoaded = await loadSchema();
+    if (!schemaLoaded) {
+      console.error('❌ YM IDE failed to load schema');
+      return;
+    }
+
+    VALIDATION_ENABLED = true;
+
+    if (window.YMHelper) {
+      window.YMHelper.IDE = {
+        parseExtIni,
+        validateSettings,
+        getSmartSuggestions,
+        isReady: () => VALIDATION_ENABLED,
+        getSchema: () => SCHEMA
+      };
+      console.log('✅ YM IDE Module ready! Schema has', Object.keys(SCHEMA.modules || {}).length, 'modules');
+    }
+  }
+
+  initialize();
+})();
+
+// ============================
+// YM IDE UI Module — ממשק משתמש
+// ============================
+(function YMIDEUIModule() {
+  'use strict';
+
+  let textarea = null;
+  let overlay = null;
+  let toggleButton = null;
+  let isIDEActive = false;
+
+  function waitForIDE() {
+    return new Promise((resolve) => {
+      const check = () => {
+        if (window.YMHelper?.IDE?.isReady()) {
+          resolve(true);
+        } else {
+          setTimeout(check, 100);
+        }
+      };
+      check();
+    });
+  }
+
+  function createIDEWrapper() {
+    textarea = document.querySelector('#extini_editor_textarea');
+    if (!textarea) {
+      console.warn('⚠️  Textarea not found');
+      return false;
+    }
+
+    if (textarea.parentElement?.classList.contains('ym-ide-wrapper')) {
+      console.log('✅ IDE Wrapper exists');
+      return true;
+    }
+
+    console.log('🔨 Creating IDE Wrapper');
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'ym-ide-wrapper';
+    wrapper.style.cssText = 'position:relative;width:100%;height:' + (textarea.style.height || '260px');
+
+    overlay = document.createElement('div');
+    overlay.className = 'ym-ide-overlay';
+    overlay.style.cssText = `inset:0; font-size:${window.getComputedStyle(textarea).fontSize}`;
+    const syncOverlay = () => {
+      const cs = window.getComputedStyle(textarea);
+      overlay.style.fontSize = cs.fontSize;
+      overlay.style.lineHeight = cs.lineHeight;
+      overlay.style.padding = cs.padding;
+    };
+    const ro = new ResizeObserver(syncOverlay);
+    ro.observe(textarea);
+    syncOverlay();
+
+    textarea.parentNode.insertBefore(wrapper, textarea);
+    wrapper.appendChild(overlay);
+    wrapper.appendChild(textarea);
+
+    textarea.addEventListener('scroll', () => {
+      overlay.scrollTop = textarea.scrollTop;
+      overlay.scrollLeft = textarea.scrollLeft;
+    });
+
+    console.log('✅ Wrapper created');
+    createToggleButton();
+    return true;
+  }
+
+  function createToggleButton() {
+    const extEditor = document.querySelector('#extini_editor');
+    if (!extEditor || document.querySelector('.ym-ide-toggle')) return;
+
+    toggleButton = document.createElement('div');
+    toggleButton.className = 'ym-ide-toggle';
+    toggleButton.innerHTML = '<span class="ym-ide-toggle-icon">🤖</span><span class="ym-ide-toggle-text">IDE</span>';
+    toggleButton.title = 'הפעל/כבה מצב IDE';
+    toggleButton.addEventListener('click', toggleIDE);
+    
+    const wrapper = textarea?.parentElement;
+    if (wrapper?.classList.contains('ym-ide-wrapper')) {
+      extEditor.insertBefore(toggleButton, wrapper);
+    } else {
+      extEditor.appendChild(toggleButton);
+    }
+
+    console.log('✅ Toggle button created');
+  }
+
+  function toggleIDE() {
+    isIDEActive = !isIDEActive;
+    toggleButton?.classList.toggle('active', isIDEActive);
+
+    if (isIDEActive) {
+      startIDE();
+    } else {
+      stopIDE();
+    }
+  }
+
+  function startIDE() {
+    if (!textarea) return;
+    
+    textarea.addEventListener('input', analyzeContent);
+    textarea.addEventListener('keydown', handleKeyDown);
+    analyzeContent();
+    console.log('✅ IDE activated');
+  }
+
+  function handleKeyDown(e) {
+    // Ctrl+Space להצגת autocomplete
+    if (e.ctrlKey && e.code === 'Space') {
+      e.preventDefault();
+      showAutocomplete();
+    }
+  }
+
+  function showAutocomplete() {
+    if (!textarea || !window.YMHelper?.IDE) return;
+
+    const cursorPos = textarea.selectionStart;
+    const textBeforeCursor = textarea.value.substring(0, cursorPos);
+    const currentLine = textBeforeCursor.split('\n').pop();
+
+    console.log('🔍 Showing autocomplete for:', currentLine);
+
+    const suggestions = window.YMHelper.IDE.getSmartSuggestions(
+      window.YMHelper.IDE.parseExtIni(textarea.value)
+    );
+
+    if (suggestions.length === 0) {
+      console.log('⚠️  No suggestions found');
+      return;
+    }
+
+    console.log('💡 Found', suggestions.length, 'suggestions');
+    displayAutocompleteMenu(suggestions, cursorPos);
+  }
+
+  function displayAutocompleteMenu(suggestions, cursorPos) {
+    // הסר תפריט קיים
+    let menu = document.querySelector('.ym-autocomplete-menu');
+    if (menu) menu.remove();
+
+    // צור תפריט חדש
+    menu = document.createElement('div');
+    menu.className = 'ym-autocomplete-menu';
+    menu.style.cssText = `
+      position: absolute;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      max-height: 300px;
+      overflow-y: auto;
+      z-index: 10000;
+      min-width: 300px;
+    `;
+
+    suggestions.forEach((sug, index) => {
+      const item = document.createElement('div');
+      item.className = 'ym-autocomplete-item';
+      item.style.cssText = `
+        padding: 8px 12px;
+        cursor: pointer;
+        border-bottom: 1px solid #f0f0f0;
+      `;
+      
+      item.innerHTML = `
+        <div style="font-weight:600;color:#2563eb;">${sug.key}${sug.required ? ' <span style="color:#ef4444;">*</span>' : ''}</div>
+        <div style="font-size:12px;color:#666;margin-top:2px;">${sug.description}</div>
+        <div style="font-size:11px;color:#999;margin-top:2px;font-family:monospace;">${sug.example}</div>
+      `;
+
+      item.addEventListener('mouseenter', () => {
+        item.style.background = '#f0f7ff';
+      });
+      
+      item.addEventListener('mouseleave', () => {
+        item.style.background = '';
+      });
+
+      item.addEventListener('click', () => {
+        insertSuggestion(sug.example);
+        menu.remove();
+      });
+
+      menu.appendChild(item);
+    });
+
+    // מקם את התפריט
+    const coords = getCaretCoordinates();
+    menu.style.top = (coords.top + 20) + 'px';
+    menu.style.left = coords.left + 'px';
+
+    document.body.appendChild(menu);
+
+    // סגור בלחיצה על Escape
+    const escHandler = (e) => {
+      if (e.key === 'Escape') {
+        menu.remove();
+        document.removeEventListener('keydown', escHandler);
+      }
+    };
+    document.addEventListener('keydown', escHandler);
+  }
+
+  function getCaretCoordinates() {
+    const rect = textarea.getBoundingClientRect();
+    return {
+      top: rect.top + window.scrollY,
+      left: rect.left + window.scrollX
+    };
+  }
+
+  function insertSuggestion(text) {
+    if (!textarea) return;
+
+    const cursorPos = textarea.selectionStart;
+    const textBefore = textarea.value.substring(0, cursorPos);
+    const textAfter = textarea.value.substring(cursorPos);
+    
+    // מצא את תחילת השורה הנוכחית
+    const lineStart = textBefore.lastIndexOf('\n') + 1;
+    
+    // החלף את השורה הנוכחית
+    textarea.value = textBefore.substring(0, lineStart) + text + '\n' + textAfter;
+    textarea.selectionStart = textarea.selectionEnd = lineStart + text.length + 1;
+    
+    // עדכן ניתוח
+    analyzeContent();
+    textarea.focus();
+  }
+
+  function stopIDE() {
+    if (!textarea) return;
+    
+    textarea.removeEventListener('input', analyzeContent);
+    textarea.removeEventListener('keydown', handleKeyDown);
+    if (overlay) overlay.innerHTML = '';
+    
+    // הסר תפריט autocomplete אם קיים
+    const menu = document.querySelector('.ym-autocomplete-menu');
+    if (menu) menu.remove();
+    
+    console.log('⏸️  IDE deactivated');
+  }
+
+  function analyzeContent() {
+    if (!textarea || !overlay || !window.YMHelper?.IDE) return;
+
+    const content = textarea.value;
+    const parsed = window.YMHelper.IDE.parseExtIni(content);
+    const validated = window.YMHelper.IDE.validateSettings(parsed);
+
+    console.log('🔍 Found', validated.errors.length, 'errors');
+
+    updateOverlay(validated);
+  }
+
+  function updateOverlay(validated) {
+    if (!overlay) return;
+
+    const lines = textarea.value.split('\n');
+    let html = '';
+
+    for (let i = 0; i < lines.length; i++) {
+      const lineNumber = i + 1;
+      const line = lines[i];
+      
+      const lineErrors = validated.errors.filter(e => e.line === lineNumber);
+
+      if (lineErrors.length > 0) {
+        // הוסף את הטקסט עם סימון שגיאה
+        const errorMessages = lineErrors.map(e => e.message).join(', ');
+        const escapedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        html += `<span class="ym-ide-error" title="${errorMessages}">${escapedLine}</span>`;
+      } else {
+        // הוסף טקסט רגיל
+        html += line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      }
+
+      if (i < lines.length - 1) html += '\n';
+    }
+
+    overlay.innerHTML = html;
+    
+    // סנכרן גלילה ומיקום
+    overlay.scrollTop = textarea.scrollTop;
+    overlay.scrollLeft = textarea.scrollLeft;
+  }
+
+  async function initialize() {
+    console.log('🎨 YM IDE UI initializing...');
+    await waitForIDE();
+
+    let retries = 0;
+    const tryCreate = () => {
+      if (createIDEWrapper()) {
+        console.log('✅ YM IDE UI ready!');
+      } else if (retries++ < 10) {
+        setTimeout(tryCreate, 1000);
+      }
+    };
+    
+    tryCreate();
+  }
+
+  initialize();
+})();
+
