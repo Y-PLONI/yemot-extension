@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "YM Helper - IDE Edition",
-  "version": "1.4.1",
-  "description": "תוסף עזר ל-YM עם IDE מלא: סימון שגיאות, השלמה אוטומטית, ודפדפן מודולים - 16 מודולים!",
+  "version": "1.5.1",
+  "description": "תוסף עזר ל-YM עם IDE מלא: סימון שגיאות, השלמה אוטומטית חכמה תוך כדי הקלדה (↑↓ Tab Enter), ודפדפן מודולים - 16 מודולים!",
   "permissions": [
     "storage"
   ],

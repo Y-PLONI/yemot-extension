@@ -234,7 +234,7 @@ html[dir="rtl"], body[dir="rtl"], .ym-side-panel { direction: rtl; }
   display: block;
 }
 
-/* IDE Overlay - מונח מעל ה-textarea */
+/* IDE Overlay - מונח מתחת ל-textarea */
 .ym-ide-overlay {
   position: absolute;
   top: 0;
@@ -242,46 +242,51 @@ html[dir="rtl"], body[dir="rtl"], .ym-side-panel { direction: rtl; }
   right: 0;
   bottom: 0;
   padding: 8px;
+  margin: 0;
+  border: 1px solid transparent;
   font-family: 'Courier New', monospace;
   font-size: 13px;
   line-height: 1.5;
   white-space: pre-wrap;
   word-wrap: break-word;
-  overflow: auto;
+  word-break: break-word;
+  overflow: hidden;
   pointer-events: none;
-  color: transparent;
-  background: transparent;
-  z-index: 3;
+  color: #000;
+  background: white;
+  z-index: 1;
   direction: ltr;
   text-align: left;
-  padding: 8px;
+  box-sizing: border-box;
 }
 
-/* Textarea בעצמו שקוף כדי לראות את ה-overlay */
+/* Textarea בעצמו שקוף כדי לראות את ה-overlay מתחתיו */
 .ym-ide-wrapper textarea {
   position: relative;
   z-index: 2;
   background: transparent !important;
-  color: #000 !important;
+  color: transparent !important;
   direction: ltr;
   text-align: left;
-  caret-color: #000;
-  -webkit-text-fill-color: #000;
+  caret-color: #000 !important;
+  -webkit-text-fill-color: transparent !important;
+  box-sizing: border-box;
 }
 
-/* סימון שגיאות - קו גלי אדום */
+/* סימון שגיאות - קו גלי אדום ברור */
 .ym-ide-error {
   color: #000 !important;
-  background-image: 
+  background-image:
     linear-gradient(45deg, transparent 0%, transparent 49%, #dc2626 49%, #dc2626 51%, transparent 51%),
     linear-gradient(-45deg, transparent 0%, transparent 49%, #dc2626 49%, #dc2626 51%, transparent 51%);
-  background-size: 6px 3px;
+  background-size: 8px 4px;
   background-repeat: repeat-x;
   background-position: bottom left;
-  padding-bottom: 3px;
+  padding-bottom: 4px;
   position: relative;
   display: inline;
   text-decoration: none;
+  border-bottom: 2px solid #dc2626;
 }
 
 /* כפתור הפעלה/כיבוי של IDE */
@@ -365,6 +370,11 @@ html[dir="rtl"], body[dir="rtl"], .ym-side-panel { direction: rtl; }
   background: #f0f7ff;
 }
 
+.ym-autocomplete-item.selected {
+  background: #dbeafe;
+  border-left: 3px solid #2563eb;
+}
+
 .ym-autocomplete-item:last-child {
   border-bottom: none;
 }
@@ -398,5 +408,3 @@ html[dir="rtl"], body[dir="rtl"], .ym-side-panel { direction: rtl; }
   border-radius: 4px;
   display: inline-block;
 }
-
-

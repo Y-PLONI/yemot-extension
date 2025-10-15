@@ -740,7 +740,7 @@
     for (const rawLine of lines) {
       lineNumber++;
       const line = rawLine.trim();
-      
+
       const lineInfo = {
         number: lineNumber,
         raw: rawLine,
@@ -772,12 +772,13 @@
         lineInfo.value = value;
 
         if (key === 'type') {
-          currentModule = value;
-          parsed.module = value;
-          lineInfo.module = value;
+          currentModule = value.toLowerCase(); // ממיר לאותיות קטנות
+          parsed.module = currentModule;
+          lineInfo.module = currentModule;
+          console.log('📋 Module detected:', currentModule);
         }
 
-        parsed.settings[key] = value;
+        parsed.settings[key.toLowerCase()] = value; // גם מפתחות באותיות קטנות
         parsed.lineInfo.push(lineInfo);
         continue;
       }
@@ -791,18 +792,22 @@
       parsed.lineInfo.push(lineInfo);
     }
 
+    console.log('📋 Final parsed module:', parsed.module);
     return parsed;
   }
 
   // ולידציה של הגדרות מול הסכימה
   function validateSettings(parsed) {
-    if (!SCHEMA || !parsed.module) return parsed;
+    if (!SCHEMA) return parsed;
 
-    const moduleSchema = SCHEMA.modules[parsed.module] || SCHEMA.modules.general;
-    if (!moduleSchema) {
+    const currentModule = parsed.module || 'general';
+    const moduleSchema = SCHEMA.modules[currentModule];
+    const generalSchema = SCHEMA.modules.general;
+
+    if (!moduleSchema && !generalSchema) {
       parsed.errors.push({
         line: 0,
-        message: `מודול לא מוכר: ${parsed.module}`,
+        message: `מודול לא מוכר: ${currentModule}`,
         severity: 'error'
       });
       return parsed;
@@ -811,7 +816,13 @@
     for (const lineInfo of parsed.lineInfo) {
       if (lineInfo.type !== 'setting') continue;
 
-      const settingDef = moduleSchema.settings.find(s => s.key === lineInfo.key);
+      // חפש בסכימה של המודול הנוכחי
+      let settingDef = moduleSchema?.settings.find(s => s.key === lineInfo.key);
+      
+      // אם לא נמצא, חפש בהגדרות כלליות
+      if (!settingDef && generalSchema) {
+        settingDef = generalSchema.settings.find(s => s.key === lineInfo.key);
+      }
       
       if (!settingDef) {
         parsed.errors.push({
@@ -823,6 +834,7 @@
         continue;
       }
 
+      // בדיקת ערכים אפשריים עבור enum
       if (settingDef.type === 'enum' && settingDef.values) {
         if (!settingDef.values.includes(lineInfo.value)) {
           parsed.errors.push({
@@ -840,30 +852,88 @@
 
   // קבלת הצעות השלמה חכמות
   function getSmartSuggestions(parsed) {
-    if (!SCHEMA) return [];
+    if (!SCHEMA) {
+      console.warn('⚠️  Schema not loaded, cannot provide suggestions');
+      return [];
+    }
 
     const suggestions = [];
     const currentModule = parsed.module || 'general';
     const moduleSchema = SCHEMA.modules[currentModule];
-    
-    if (!moduleSchema) return suggestions;
+    const generalSchema = SCHEMA.modules.general;
 
-    for (const settingDef of moduleSchema.settings) {
-      if (settingDef.key === 'type') continue;
-      
-      if (!parsed.settings[settingDef.key]) {
-        suggestions.push({
-          key: settingDef.key,
-          value: settingDef.default || settingDef.example || '',
-          description: settingDef.description,
-          required: settingDef.required || false,
-          priority: settingDef.required ? 100 : 50
-        });
+    console.log('💡 Generating suggestions for module:', currentModule);
+
+    // הוסף הצעות מהמודול הנוכחי
+    if (moduleSchema) {
+      for (const settingDef of moduleSchema.settings) {
+        // אל תציע 'type' אם כבר יש מודול מוגדר (למעט אם אנחנו ב-general)
+        if (settingDef.key === 'type' && parsed.module && parsed.module !== 'general') continue;
+        
+        if (!parsed.settings[settingDef.key]) {
+          suggestions.push({
+            key: settingDef.key,
+            value: settingDef.default || settingDef.example || '',
+            description: settingDef.description || 'אין תיאור',
+            required: settingDef.required || false,
+            example: settingDef.example || `${settingDef.key}=`,
+            priority: settingDef.required ? 100 : 50,
+            module: currentModule
+          });
+        }
       }
     }
 
-    suggestions.sort((a, b) => b.priority - a.priority);
-    return suggestions;
+    // הוסף הצעות מהגדרות כלליות (אם לא במודול general)
+    if (currentModule !== 'general' && generalSchema) {
+      for (const settingDef of generalSchema.settings) {
+        if (!parsed.settings[settingDef.key]) {
+          suggestions.push({
+            key: settingDef.key,
+            value: settingDef.default || settingDef.example || '',
+            description: settingDef.description + ' (כללי)',
+            required: false,
+            example: settingDef.example || `${settingDef.key}=`,
+            priority: 30,
+            module: 'general'
+          });
+        }
+      }
+    }
+
+    // אם אנחנו ב-general ואין type, הצע את כל המודולים האפשריים
+    if (currentModule === 'general' && !parsed.settings['type']) {
+      for (const moduleName in SCHEMA.modules) {
+        if (moduleName === 'general') continue;
+        const modSchema = SCHEMA.modules[moduleName];
+        if (modSchema.type_value) {
+          suggestions.push({
+            key: 'type',
+            value: modSchema.type_value,
+            description: `מודול ${modSchema.name}`,
+            required: false,
+            example: `type=${modSchema.type_value}`,
+            priority: 80,
+            module: moduleName
+          });
+        }
+      }
+    }
+
+    // הסר כפילויות (לפי key)
+    const uniqueSuggestions = [];
+    const seenKeys = new Set();
+    for (const sug of suggestions) {
+      const uniqueKey = sug.key + '=' + sug.value;
+      if (!seenKeys.has(uniqueKey)) {
+        seenKeys.add(uniqueKey);
+        uniqueSuggestions.push(sug);
+      }
+    }
+
+    uniqueSuggestions.sort((a, b) => b.priority - a.priority);
+    console.log('💡 Found', uniqueSuggestions.length, 'suggestions');
+    return uniqueSuggestions;
   }
 
   // אתחול
@@ -937,13 +1007,24 @@
 
     overlay = document.createElement('div');
     overlay.className = 'ym-ide-overlay';
-    overlay.style.cssText = `inset:0; font-size:${window.getComputedStyle(textarea).fontSize}`;
+    
+    // סנכרון סגנון מדויק בין overlay ל-textarea
     const syncOverlay = () => {
       const cs = window.getComputedStyle(textarea);
       overlay.style.fontSize = cs.fontSize;
       overlay.style.lineHeight = cs.lineHeight;
+      overlay.style.fontFamily = cs.fontFamily;
       overlay.style.padding = cs.padding;
+      overlay.style.paddingTop = cs.paddingTop;
+      overlay.style.paddingRight = cs.paddingRight;
+      overlay.style.paddingBottom = cs.paddingBottom;
+      overlay.style.paddingLeft = cs.paddingLeft;
+      overlay.style.border = cs.border;
+      overlay.style.borderWidth = cs.borderWidth;
+      overlay.style.letterSpacing = cs.letterSpacing;
+      overlay.style.wordSpacing = cs.wordSpacing;
     };
+    
     const ro = new ResizeObserver(syncOverlay);
     ro.observe(textarea);
     syncOverlay();
@@ -952,10 +1033,16 @@
     wrapper.appendChild(overlay);
     wrapper.appendChild(textarea);
 
+    // סנכרון גלילה - overlay לא צריך לגלול כי הוא מתחת
     textarea.addEventListener('scroll', () => {
       overlay.scrollTop = textarea.scrollTop;
       overlay.scrollLeft = textarea.scrollLeft;
     });
+
+    // הסתר את הכפתור הצף אם IDE פעיל כדי למנוע התנגשות
+    if (toggleButton) {
+      toggleButton.style.display = 'none';
+    }
 
     console.log('✅ Wrapper created');
     createToggleButton();
@@ -997,17 +1084,70 @@
     if (!textarea) return;
     
     textarea.addEventListener('input', analyzeContent);
+    textarea.addEventListener('input', handleInput);
     textarea.addEventListener('keydown', handleKeyDown);
     analyzeContent();
     console.log('✅ IDE activated');
   }
 
+  function handleInput(e) {
+    // הצג autocomplete תוך כדי הקלדה
+    const cursorPos = textarea.selectionStart;
+    const textBeforeCursor = textarea.value.substring(0, cursorPos);
+    const currentLine = textBeforeCursor.split('\n').pop();
+    
+    // אם השורה לא ריקה ואין '=' עדיין, הצג הצעות
+    if (currentLine.trim() && !currentLine.includes('=')) {
+      showAutocomplete();
+    }
+  }
+
   function handleKeyDown(e) {
-    // Ctrl+Space להצגת autocomplete
+    const menu = document.querySelector('.ym-autocomplete-menu');
+    
+    // אם יש תפריט פתוח, טפל בניווט
+    if (menu) {
+      const items = menu.querySelectorAll('.ym-autocomplete-item');
+      const selected = menu.querySelector('.ym-autocomplete-item.selected');
+      let selectedIndex = selected ? Array.from(items).indexOf(selected) : -1;
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+        updateSelection(items, selectedIndex);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        selectedIndex = Math.max(selectedIndex - 1, 0);
+        updateSelection(items, selectedIndex);
+      } else if (e.key === 'Tab' || e.key === 'Enter') {
+        e.preventDefault();
+        if (selected) {
+          selected.click();
+        } else if (items[0]) {
+          items[0].click();
+        }
+      } else if (e.key === 'Escape') {
+        menu.remove();
+      }
+      return;
+    }
+
+    // Ctrl+Space להצגת autocomplete ידנית
     if (e.ctrlKey && e.code === 'Space') {
       e.preventDefault();
       showAutocomplete();
     }
+  }
+
+  function updateSelection(items, index) {
+    items.forEach((item, i) => {
+      if (i === index) {
+        item.classList.add('selected');
+        item.scrollIntoView({ block: 'nearest' });
+      } else {
+        item.classList.remove('selected');
+      }
+    });
   }
 
   function showAutocomplete() {
@@ -1015,16 +1155,37 @@
 
     const cursorPos = textarea.selectionStart;
     const textBeforeCursor = textarea.value.substring(0, cursorPos);
-    const currentLine = textBeforeCursor.split('\n').pop();
+    const currentLine = textBeforeCursor.split('\n').pop().trim();
 
     console.log('🔍 Showing autocomplete for:', currentLine);
 
-    const suggestions = window.YMHelper.IDE.getSmartSuggestions(
+    // קבל את כל ההצעות
+    let suggestions = window.YMHelper.IDE.getSmartSuggestions(
       window.YMHelper.IDE.parseExtIni(textarea.value)
     );
 
+    // סנן לפי מה שהמשתמש כבר הקליד
+    if (currentLine) {
+      const searchTerm = currentLine.toLowerCase();
+      suggestions = suggestions.filter(sug => 
+        sug.key.toLowerCase().startsWith(searchTerm) ||
+        sug.key.toLowerCase().includes(searchTerm)
+      );
+      
+      // מיין: תחילה אלה שמתחילים עם המילה, אחר כך אלה שמכילים
+      suggestions.sort((a, b) => {
+        const aStarts = a.key.toLowerCase().startsWith(searchTerm);
+        const bStarts = b.key.toLowerCase().startsWith(searchTerm);
+        if (aStarts && !bStarts) return -1;
+        if (!aStarts && bStarts) return 1;
+        return b.priority - a.priority;
+      });
+    }
+
     if (suggestions.length === 0) {
       console.log('⚠️  No suggestions found');
+      const menu = document.querySelector('.ym-autocomplete-menu');
+      if (menu) menu.remove();
       return;
     }
 
@@ -1117,27 +1278,58 @@
     
     // מצא את תחילת השורה הנוכחית
     const lineStart = textBefore.lastIndexOf('\n') + 1;
+    const currentLine = textBefore.substring(lineStart);
     
-    // החלף את השורה הנוכחית
-    textarea.value = textBefore.substring(0, lineStart) + text + '\n' + textAfter;
-    textarea.selectionStart = textarea.selectionEnd = lineStart + text.length + 1;
+    // אם יש '=' בשורה הנוכחית, החלף רק את המפתח
+    if (text.includes('=')) {
+      const newLine = text;
+      textarea.value = textBefore.substring(0, lineStart) + newLine + textAfter;
+      
+      // שים את הסמן אחרי ה-'='
+      const equalPos = lineStart + newLine.indexOf('=') + 1;
+      textarea.selectionStart = textarea.selectionEnd = equalPos;
+    } else {
+      // אחרת, החלף את כל השורה
+      textarea.value = textBefore.substring(0, lineStart) + text + '\n' + textAfter;
+      textarea.selectionStart = textarea.selectionEnd = lineStart + text.length + 1;
+    }
     
     // עדכן ניתוח
     analyzeContent();
     textarea.focus();
+    
+    // הסר את התפריט
+    const menu = document.querySelector('.ym-autocomplete-menu');
+    if (menu) menu.remove();
   }
 
   function stopIDE() {
     if (!textarea) return;
-    
+
     textarea.removeEventListener('input', analyzeContent);
+    textarea.removeEventListener('input', handleInput);
     textarea.removeEventListener('keydown', handleKeyDown);
     if (overlay) overlay.innerHTML = '';
-    
+
     // הסר תפריט autocomplete אם קיים
     const menu = document.querySelector('.ym-autocomplete-menu');
     if (menu) menu.remove();
-    
+
+    // הראה את הכפתור הצף שוב
+    if (toggleButton) {
+      toggleButton.style.display = '';
+    }
+
+    // חזור להורים המקוריים של ה-textarea
+    const wrapper = textarea.parentElement;
+    if (wrapper?.classList.contains('ym-ide-wrapper')) {
+      const parent = wrapper.parentElement;
+      if (parent) {
+        parent.insertBefore(textarea, wrapper);
+        parent.removeChild(wrapper);
+      }
+    }
+
     console.log('⏸️  IDE deactivated');
   }
 
@@ -1148,7 +1340,8 @@
     const parsed = window.YMHelper.IDE.parseExtIni(content);
     const validated = window.YMHelper.IDE.validateSettings(parsed);
 
-    console.log('🔍 Found', validated.errors.length, 'errors');
+    console.log('🔍 Found', validated.errors.length, 'errors in content analysis');
+    console.log('📋 Content preview:', content.substring(0, 200) + '...');
 
     updateOverlay(validated);
   }
@@ -1162,27 +1355,32 @@
     for (let i = 0; i < lines.length; i++) {
       const lineNumber = i + 1;
       const line = lines[i];
-      
+
       const lineErrors = validated.errors.filter(e => e.line === lineNumber);
 
       if (lineErrors.length > 0) {
         // הוסף את הטקסט עם סימון שגיאה
         const errorMessages = lineErrors.map(e => e.message).join(', ');
-        const escapedLine = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        html += `<span class="ym-ide-error" title="${errorMessages}">${escapedLine}</span>`;
+        const escapedLine = line.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
+        html += `<span class="ym-ide-error" title="${errorMessages}" style="position: relative; display: inline-block;">${escapedLine}</span>`;
+        console.log(`🛑 Error on line ${lineNumber}: ${line} - ${errorMessages}`);
       } else {
         // הוסף טקסט רגיל
-        html += line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        html += line.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
       }
 
       if (i < lines.length - 1) html += '\n';
     }
 
     overlay.innerHTML = html;
-    
+
     // סנכרן גלילה ומיקום
     overlay.scrollTop = textarea.scrollTop;
     overlay.scrollLeft = textarea.scrollLeft;
+
+    // עדכן את הגובה של ה-overlay כדי להתאים לטקסט
+    const overlayHeight = overlay.scrollHeight;
+    overlay.style.height = overlayHeight + 'px';
   }
 
   async function initialize() {
@@ -1203,4 +1401,3 @@
 
   initialize();
 })();
-
