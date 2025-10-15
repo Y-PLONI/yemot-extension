@@ -16,6 +16,38 @@
   display: block;
 }
 
+/* סמל התוסף מעל תיבת הקלטת המילים */
+.ym-extini-icon {
+  position: absolute;
+  top: -35px;
+  left: 10px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #fff 0%, #f1f5ff 100%);
+  color: #111;
+  border: 1px solid rgba(0,0,0,0.1);
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.ym-extini-icon:hover {
+  background: linear-gradient(180deg, #f1f5ff 0%, #e1e8ff 100%);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* וידוא שה-container של העורך יהיה יחסי למיקום */
+#extini_editor {
+  position: relative !important;
+}
+
 :root {
   --panel-width: 420px; /* צמצום נוסף של הפאנל */
   --panel-width-mobile: 100%;

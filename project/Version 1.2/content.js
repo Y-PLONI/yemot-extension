@@ -96,6 +96,45 @@
     }
   });
 
+  // הוספת סמל התוסף מעל תיבת הקלטת המילים
+  function addExtIniIcon() {
+    // חיפוש תיבת הקלטת המילים
+    const extTextarea = document.querySelector('#extini_editor_textarea');
+    if (!extTextarea) return;
+
+    // וידוא שלא הוספנו כבר את הסמל
+    if (document.querySelector('.ym-extini-icon')) return;
+
+    // יצירת container לסמל
+    const iconContainer = el('div', { 
+      class: 'ym-extini-icon',
+      title: 'פתח/סגור את חלונית ההגדרות'
+    }, [
+      el('span', { html: '&#9881;' }) // gear emoji-like
+    ]);
+
+    // הוספת הסמל מעל תיבת הקלדה
+    const extEditor = document.querySelector('#extini_editor');
+    if (extEditor) {
+      extEditor.insertBefore(iconContainer, extTextarea);
+    }
+
+    // הוספת אירוע לחיצה לפתיחת/סגירת החלונית
+    iconContainer.addEventListener('click', () => {
+      panel.classList.toggle('open');
+      syncBodyOpenClass();
+    });
+  }
+
+  // הפעלת הפונקציה כשהדף נטען
+  addExtIniIcon();
+  
+  // במקרה שהאלמנט נוסף דינמית, נבדוק שוב כל כמה שניות
+  setInterval(addExtIniIcon, 3000);
+
+  // הודעה במסוף שהתוסף נטען
+  console.log('🎯 YM Helper נטען בהצלחה! שימוש: window.YMHelper או לחיצה על הסמלים');
+
   // וודא שהחלונית לא תפריע לאלמנטים של הדף (z-index גבוה אבל לא מוגזם)
   // וגם תקן בעיות של overflow במקרה והדף משתמש ב־body overflow:hidden
   document.documentElement.style.removeProperty('overflow');
@@ -141,6 +180,109 @@
 
   function normalize(str) { return (str || '').toLowerCase().replace(/[\u0591-\u05C7]/g, '').trim(); }
   function filterItems(items, q) { const n = normalize(q); if (!n) return items.slice(0, 50); return items.filter(it => normalize(it.title).includes(n) || normalize(it.code).includes(n)).slice(0, 50); }
+
+  // פונקציה לקריאת תוכן תיבת הקלטת המילים
+  function getExtIniContent() {
+    const textarea = document.querySelector('#extini_editor_textarea');
+    return textarea ? textarea.value : '';
+  }
+
+  // פונקציה לעדכון תוכן תיבת הקלטת המילים
+  function setExtIniContent(content) {
+    const textarea = document.querySelector('#extini_editor_textarea');
+    if (textarea) {
+      textarea.value = content;
+      // הפעלת אירועי שינוי כדי שהדף יזהה את השינוי
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
+      textarea.dispatchEvent(new Event('change', { bubbles: true }));
+      return true;
+    }
+    return false;
+  }
+
+  // פונקציה לניתוח תוכן ה-EXT.INI
+  function parseExtIniContent(content) {
+    const lines = content.split('\n');
+    const settings = [];
+    let currentCategory = 'כללי';
+    
+    for (const line of lines) {
+      const trimmed = line.trim();
+      
+      // זיהוי קטגוריה
+      if (trimmed.startsWith(';') && trimmed.includes('===')) {
+        const match = trimmed.match(/===\s*(.+?)\s*===/);
+        if (match) {
+          currentCategory = match[1].trim();
+        }
+        continue;
+      }
+      
+      // זיהוי הגדרה
+      if (trimmed && !trimmed.startsWith(';') && trimmed.includes('=')) {
+        const equalIndex = trimmed.indexOf('=');
+        const key = trimmed.substring(0, equalIndex).trim();
+        const value = trimmed.substring(equalIndex + 1).trim();
+        
+        // חיפוש הסבר בתגובה
+        const commentMatch = trimmed.match(/\/\/(.+)$/);
+        const description = commentMatch ? commentMatch[1].trim() : '';
+        
+        settings.push({
+          key,
+          value,
+          description,
+          category: currentCategory,
+          fullLine: trimmed
+        });
+      }
+    }
+    
+    return settings;
+  }
+
+  // פונקציה לקבלת סטטיסטיקות על תוכן ה-EXT.INI
+  function getExtIniStats() {
+    const content = getExtIniContent();
+    const settings = parseExtIniContent(content);
+    
+    const stats = {
+      totalLines: content.split('\n').length,
+      totalSettings: settings.length,
+      categories: {},
+      isEmpty: content.trim() === ''
+    };
+    
+    // ספירת הגדרות לפי קטגוריה
+    for (const setting of settings) {
+      if (!stats.categories[setting.category]) {
+        stats.categories[setting.category] = 0;
+      }
+      stats.categories[setting.category]++;
+    }
+    
+    return stats;
+  }
+
+  // חשיפת הפונקציות לשימוש גלובלי (למקרה שנרצה להשתמש בהן בהמשך)
+  window.YMHelper = {
+    getExtIniContent,
+    setExtIniContent,
+    parseExtIniContent,
+    getExtIniStats,
+    openPanel: () => {
+      panel.classList.add('open');
+      syncBodyOpenClass();
+    },
+    closePanel: () => {
+      panel.classList.remove('open');
+      syncBodyOpenClass();
+    },
+    togglePanel: () => {
+      panel.classList.toggle('open');
+      syncBodyOpenClass();
+    }
+  };
 
   // ממיר מבנה JSON כללי לה扭 ITEMS שטוחים עם קטגוריות
   // תומך בשני פורמטים:
