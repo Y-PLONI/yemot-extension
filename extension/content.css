@@ -223,6 +223,107 @@ html[dir="rtl"], body[dir="rtl"], .ym-side-panel { direction: rtl; }
 /* כמה שורות קטנות של עזר */
 .ym-hint { color: var(--muted); font-size: 12px; }
 
+/* Module Browser Styles */
+.ym-module-search {
+  width: 100%;
+  font-size: 15px;
+  padding: 10px 14px;
+}
+
+.ym-welcome {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+}
+
+.ym-welcome-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.7;
+}
+
+.ym-welcome-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.ym-welcome-text {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.ym-module-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.ym-module-header h3 {
+  margin: 0 0 8px 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.ym-module-desc {
+  opacity: 0.9;
+  font-size: 14px;
+}
+
+.ym-result-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.ym-result-key {
+  font-weight: 600;
+  color: #667eea;
+}
+
+.ym-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.ym-badge-required {
+  background: #ff6b6b;
+  color: white;
+}
+
+.ym-result-desc {
+  color: var(--text);
+  margin-bottom: 4px;
+  line-height: 1.5;
+}
+
+.ym-result-example {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.ym-result-example code {
+  background: rgba(102, 126, 234, 0.1);
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: #667eea;
+}
+
+.ym-result-values {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
 /* ============================
    YM IDE Styles
    ============================ */
@@ -292,8 +393,8 @@ html[dir="rtl"], body[dir="rtl"], .ym-side-panel { direction: rtl; }
 /* כפתור הפעלה/כיבוי של IDE */
 .ym-ide-toggle {
   position: absolute;
-  top: -42px;
-  right: 10px;
+  top: -35px;
+  left: 50px;
   z-index: 1000;
   display: flex;
   align-items: center;

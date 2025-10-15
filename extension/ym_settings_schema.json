@@ -1,7 +1,7 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.2",
   "lastUpdate": "2025-10-15",
-  "description": "סכמת הגדרות מלאה למערכת ימות המשיח - תומך בכל המודולים והפקודות",
+  "description": "סכמת הגדרות מלאה למערכת ימות המשיח - תומך בכל המודולים והפקודות (מתוקן)",
   
   "modules": {
     "general": {
@@ -200,7 +200,7 @@
     },
     
     "read": {
-      "name": "קריאה (קבלת נתונים)",
+      "name": "קריאה",
       "description": "מודול קריאת נתונים",
       "type_value": "read",
       "settings": [
@@ -279,164 +279,3974 @@
       ]
     },
 
-    "say_dialing_number": {
-      "name": "השמעת המספר של המתקשר",
-      "description": "מודול המקריא למאזין את המספר שלו או מציג אותו ב-TTS",
-      "type_value": "say_dialing_number",
+    "sale_products": {
+      "name": "הזמנת מוצרים לפי מק\"ט",
+      "description": "מודול מכירת מוצרים עם מערכת מק\"ט מתקדמת",
+      "type_value": "sale_products",
       "settings": [
         {
           "key": "type",
-          "description": "הגדרת מודול",
+          "description": "הגדרת מודול הזמנת מוצרים",
           "type": "fixed",
           "required": true,
-          "value": "say_dialing_number",
-          "example": "type=say_dialing_number"
-        }
-      ]
-    },
-    
-    "conf_bridge": {
-      "name": "חדר ועידה / שידור חי",
-      "description": "מודול חדר ועידה רב-משתתפים או שידור חי",
-      "type_value": "conf_bridge",
-      "settings": [
+          "value": "sale_products",
+          "example": "type=sale_products"
+        },
         {
-          "key": "type",
-          "description": "הגדרת מודול",
-          "type": "fixed",
-          "required": true,
-          "value": "conf_bridge",
-          "example": "type=conf_bridge"
-        }
-      ]
-    },
-    
-    "queue": {
-      "name": "מודול תור",
-      "description": "מודול לניהול תור המתנה למענה אנושי (Routing)",
-      "type_value": "queue",
-      "settings": [
+          "key": "sale_products_catalog_number",
+          "description": "מספר מק\"ט ספציפי או אפשרויות מיוחדות (category, checkout, voice, approvals, index)",
+          "type": "text",
+          "required": false,
+          "example": "sale_products_catalog_number=111"
+        },
         {
-          "key": "type",
-          "description": "הגדרת מודול",
-          "type": "fixed",
-          "required": true,
-          "value": "queue",
-          "example": "type=queue"
-        }
-      ]
-    },
-    
-    "routing": {
-      "name": "ראוטינג - הפניית שיחות",
-      "description": "מודול הפניית שיחה לטלפון חיצוני או למערכת אחרת",
-      "type_value": "routing",
-      "settings": [
+          "key": "sale_products_category_type",
+          "description": "שם הקטגוריה כאשר בוחרים category",
+          "type": "text",
+          "required": false,
+          "example": "sale_products_category_type=pesach"
+        },
         {
-          "key": "type",
-          "description": "הגדרת מודול",
-          "type": "fixed",
-          "required": true,
-          "value": "routing",
-          "example": "type=routing"
-        }
-      ]
-    },
-    
-    "survey": {
-      "name": "סקר / מבחן",
-      "description": "מודול סקר טריויה או מבחן אמריקאי",
-      "type_value": "survey",
-      "settings": [
+          "key": "sale_products_digits",
+          "description": "מספר ספרות במק\"ט (ברירת מחדל 3)",
+          "type": "number",
+          "required": false,
+          "range": [1, 10],
+          "default": 3,
+          "example": "sale_products_digits=5"
+        },
         {
-          "key": "type",
-          "description": "הגדרת מודול",
-          "type": "fixed",
-          "required": true,
-          "value": "survey",
-          "example": "type=survey"
-        }
-      ]
-    },
-    
-    "fax": {
-      "name": "קבלת / שליחת פקס",
-      "description": "מודול לשליחה או קבלה של מסמכי פקס",
-      "type_value": "fax",
-      "settings": [
+          "key": "sale_products_digits_amount",
+          "description": "מספר ספרות לכמות הזמנה (ברירת מחדל 1)",
+          "type": "number",
+          "required": false,
+          "range": [1, 10],
+          "default": 1,
+          "example": "sale_products_digits_amount=3"
+        },
         {
-          "key": "type",
-          "description": "הגדרת מודול",
-          "type": "fixed",
-          "required": true,
-          "value": "fax",
-          "example": "type=fax"
-        }
-      ]
-    },
-    
-    "tzintuk": {
-      "name": "צינתוקים",
-      "description": "מודול ניהול רשימת צינתוקים (Callback)",
-      "type_value": "tzintuk",
-      "settings": [
+          "key": "sale_products_009_digits_amount",
+          "description": "הגבלת ספרות לכמות לתוצר מסוים (009 = מק\"ט)",
+          "type": "number",
+          "required": false,
+          "range": [1, 10],
+          "example": "sale_products_009_digits_amount=5"
+        },
         {
-          "key": "type",
-          "description": "הגדרת מודול",
-          "type": "fixed",
-          "required": true,
-          "value": "tzintuk",
-          "example": "type=tzintuk"
-        }
-      ]
-    },
-    
-    "campaign": {
-      "name": "קמפיין",
-      "description": "מודול לניהול רשימת תפוצה וקמפיינים יוצאים",
-      "type_value": "campaign",
-      "settings": [
+          "key": "sale_products_009_amount",
+          "description": "כמות מוגדרת מראש למוצר ספציפי",
+          "type": "number",
+          "required": false,
+          "range": [1, 999999],
+          "example": "sale_products_009_amount=5"
+        },
         {
-          "key": "type",
-          "description": "הגדרת מודול",
-          "type": "fixed",
-          "required": true,
-          "value": "campaign",
-          "example": "type=campaign"
-        }
-      ]
-    },
-    
-    "billing": {
-      "name": "סליקת אשראי / תרומות",
-      "description": "מודול לביצוע תשלומים וסליקת אשראי",
-      "type_value": "billing",
-      "settings": [
+          "key": "sale_products_maximum_amount",
+          "description": "הפעלת הגבלת מלאי מוצרים",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "sale_products_maximum_amount=yes"
+        },
         {
-          "key": "type",
-          "description": "הגדרת מודול",
-          "type": "fixed",
-          "required": true,
-          "value": "billing",
-          "example": "type=billing"
+          "key": "shipping_price",
+          "description": "דמי משלוח ברירת מחדל או עם הגבלה על הוזמה (שני פרמטרים: מחיר,פחות מסכום)",
+          "type": "text",
+          "required": false,
+          "example": "shipping_price=14.99 | shipping_price=14.99,500"
+        },
+        {
+          "key": "shipping_add",
+          "description": "הפעלת דמי משלוח (user_select, no)",
+          "type": "enum",
+          "required": false,
+          "values": ["user_select", "no"],
+          "example": "shipping_add=no"
+        },
+        {
+          "key": "sale_products_add_bonus_for",
+          "description": "הוספת בונוס על כל X פריטים",
+          "type": "number",
+          "required": false,
+          "range": [1, 1000],
+          "example": "sale_products_add_bonus_for=5"
+        },
+        {
+          "key": "sale_products_check_teudat_zeut",
+          "description": "בדיקת תעודת זהות לכל משתתף",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "sale_products_check_teudat_zeut=yes"
+        },
+        {
+          "key": "sale_products_discount",
+          "description": "הפעלת הנחה לפי מדרגות קניות",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "sale_products_discount=yes"
+        },
+        {
+          "key": "credit_card_currency",
+          "description": "מטבע לסליקה (ברירת מחדל שקלים, 2 = דולר)",
+          "type": "number",
+          "required": false,
+          "range": [1, 10],
+          "default": 1,
+          "example": "credit_card_currency=2"
+        },
+        {
+          "key": "sale_products_approval_number_start",
+          "description": "מספר אישור התחלתי",
+          "type": "number",
+          "required": false,
+          "default": 1001,
+          "example": "sale_products_approval_number_start=770"
+        },
+        {
+          "key": "sale_products_approval_number_from_file",
+          "description": "שליפת מספרי אישור מקובץ",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "sale_products_approval_number_from_file=yes"
+        },
+        {
+          "key": "sale_products_payment_credit_card_only_shipping_price",
+          "description": "סליקה רק לדמי משלוח",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "sale_products_payment_credit_card_only_shipping_price=yes"
+        },
+        {
+          "key": "sale_products_payment_methods",
+          "description": "שיטת תשלום ברירת מחדל (credit_card, recording_and_entering_data, cash, dealer)",
+          "type": "enum",
+          "required": false,
+          "values": ["credit_card", "recording_and_entering_data", "cash", "dealer"],
+          "example": "sale_products_payment_methods=credit_card"
+        },
+        {
+          "key": "sale_products_payment_record",
+          "description": "הקלטת פרטים לפני תשלום",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "sale_products_payment_record=yes"
+        },
+        {
+          "key": "sale_products_payment_record_stt",
+          "description": "תומלל ההקלטה הכnsמטקסט",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "sale_products_payment_record_stt=yes"
+        },
+        {
+          "key": "sale_products_record_ok",
+          "description": "מקש אישור להקלטה (ברירת מחדל #)",
+          "type": "text",
+          "required": false,
+          "default": "#",
+          "example": "sale_products_record_ok=#"
+        },
+        {
+          "key": "sale_products_tfr_check_save_play_tfr_b",
+          "description": "תפריט חדש להזמנת מוצרים",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "sale_products_tfr_check_save_play_tfr_b=yes"
+        },
+        {
+          "key": "sale_products_amount_tfr_ask_ok",
+          "description": "לבקש אישור כמות",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "sale_products_amount_tfr_ask_ok=no"
+        },
+        {
+          "key": "sale_products_tfr_check_more_products",
+          "description": "לחזור להזמנה נוספת (next, no, exit)",
+          "type": "enum",
+          "required": false,
+          "values": ["next", "no", "exit"],
+          "example": "sale_products_tfr_check_more_products=no"
+        },
+        {
+          "key": "sale_products_tfr_check_save_say_price",
+          "description": "להשמיע מחיר",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "sale_products_tfr_check_save_say_price=no"
+        },
+        {
+          "key": "sale_products_tfr_amount_price_all_say_amount",
+          "description": "להשמיע את הכמות",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "sale_products_tfr_amount_price_all_say_amount=no"
+        },
+        {
+          "key": "sale_products_tfr_amount_price_all_say_price",
+          "description": "להשמיע את המחיר ליחידה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "sale_products_tfr_amount_price_all_say_price=no"
+        },
+        {
+          "key": "sale_products_tfr_check_checkout_ok_say_price_total",
+          "description": "להשמיע סך הכל בהזמנה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "sale_products_tfr_check_checkout_ok_say_price_total=no"
+        },
+        {
+          "key": "sale_products_tfr_check_checkout_ok_say_details",
+          "description": "להשמיע פירוט ההזמנה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no", "payment_total"],
+          "default": "yes",
+          "example": "sale_products_tfr_check_checkout_ok_say_details=no"
+        },
+        {
+          "key": "sale_products_tfr_check_checkout_ok_approval_without_asking",
+          "description": "אישור הזמנה ללא בקשת אישור",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "sale_products_tfr_check_checkout_ok_approval_without_asking=yes"
+        },
+        {
+          "key": "sale_products_payment_ok_say_approval_number",
+          "description": "להשמיע מספר אישור",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "sale_products_payment_ok_say_approval_number=no"
+        },
+        {
+          "key": "sale_products_payment_ok_tfr_approval",
+          "description": "להציע שמיעה חוזרת של האישור",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "sale_products_payment_ok_tfr_approval=no"
+        },
+        {
+          "key": "sale_products_ok_sand_api",
+          "description": "שליחת אישור ל-API חיצוני",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "sale_products_ok_sand_api=yes"
+        },
+        {
+          "key": "sale_products_end_goto",
+          "description": "יעד לאחר סיום מוצלח",
+          "type": "text",
+          "required": false,
+          "example": "sale_products_end_goto=/5/8"
+        },
+        {
+          "key": "sale_products_category_end_go_to_checkout",
+          "description": "מעבר ישיר לתשלום בסיום קטגוריה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "sale_products_category_end_go_to_checkout=yes"
+        },
+        {
+          "key": "sale_products_category_end_exit_goto",
+          "description": "יעד בסיום קטגוריה",
+          "type": "text",
+          "required": false,
+          "example": "sale_products_category_end_exit_goto=/8/8"
+        },
+        {
+          "key": "sale_products_checkout_no_products_goto",
+          "description": "יעד כאשר סל הקניות ריק",
+          "type": "text",
+          "required": false,
+          "example": "sale_products_checkout_no_products_goto=/8/8"
+        },
+        {
+          "key": "sale_products_tfr_check_save_exit_goto",
+          "description": "יעד ביציאה ממוצר מוגדר",
+          "type": "text",
+          "required": false,
+          "example": "sale_products_tfr_check_save_exit_goto=/8/8"
+        },
+        {
+          "key": "sale_products_cancel_goto",
+          "description": "יעד בביטול הזמנה",
+          "type": "text",
+          "required": false,
+          "example": "sale_products_cancel_goto=/8/8"
+        },
+        {
+          "key": "sale_products_invited_product_goto",
+          "description": "יעד כאשר מוצר כבר הוזמן",
+          "type": "text",
+          "required": false,
+          "example": "sale_products_invited_product_goto=/8/8"
+        },
+        {
+          "key": "sale_products_end_products_goto",
+          "description": "יעד כאשר מוצר אזל מהמלאי",
+          "type": "text",
+          "required": false,
+          "example": "sale_products_end_products_goto=/8/8"
+        },
+        {
+          "key": "sale_products_tfr_check_more_exit_goto",
+          "description": "יעד בחזרה להזמנת מוצרים",
+          "type": "text",
+          "required": false,
+          "example": "sale_products_tfr_check_more_exit_goto=/8/8"
+        },
+        {
+          "key": "sale_products_no_data_goto",
+          "description": "יעד כאשר אין נתונים (שגיאה)",
+          "type": "text",
+          "required": false,
+          "example": "sale_products_no_data_goto=/8/8"
         }
       ]
     },
 
-    "presence_clock": {
-      "name": "שעון נוכחות",
-      "description": "מודול דיווח כניסה ויציאה (שעון נוכחות)",
-      "type_value": "presence_clock",
+    "add_id_to_list": {
+      "name": "הוספת ערך לרשימה",
+      "description": "מודול הוספת מזהי משתמש לרשימה מסויימת",
+      "type_value": "add_id_to_list",
       "settings": [
         {
           "key": "type",
-          "description": "הגדרת מודול",
+          "description": "הגדרת מודול הוספת ערך לרשימה",
           "type": "fixed",
           "required": true,
-          "value": "presence_clock",
-          "example": "type=presence_clock"
+          "value": "add_id_to_list",
+          "example": "type=add_id_to_list"
+        },
+        {
+          "key": "add_id_to_list_location_list",
+          "description": "נתיב לקובץ הרשימה",
+          "type": "folder",
+          "required": true,
+          "example": "add_id_to_list_location_list=/id"
+        },
+        {
+          "key": "add_id_to_list_location_tfr_file_name",
+          "description": "שם קובץ ה-TFR",
+          "type": "text",
+          "required": false,
+          "example": "add_id_to_list_location_tfr_file_name=ext"
+        },
+        {
+          "key": "add_id_to_list_key_type",
+          "description": "סוג המפתח (digits, keyboard)",
+          "type": "enum",
+          "required": false,
+          "values": ["digits", "keyboard"],
+          "default": "digits",
+          "example": "add_id_to_list_key_type=digits"
+        },
+        {
+          "key": "add_id_to_list_key_first",
+          "description": "תחילית למפתח",
+          "type": "text",
+          "required": false,
+          "example": "add_id_to_list_key_first=SIP-"
+        },
+        {
+          "key": "add_id_to_list_value_type",
+          "description": "סוג הערך (EnterID, digits, keyboard)",
+          "type": "enum",
+          "required": false,
+          "values": ["EnterID", "digits", "keyboard"],
+          "default": "EnterID",
+          "example": "add_id_to_list_value_type=EnterID"
+        },
+        {
+          "key": "add_id_to_list_value_change",
+          "description": "לאפשר שינוי ערך קיים",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "add_id_to_list_value_change=yes"
+        },
+        {
+          "key": "add_id_to_list_value_plus",
+          "description": "הוספה לערך קיים",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "add_id_to_list_value_plus=yes"
+        },
+        {
+          "key": "add_id_to_list_check_block_list",
+          "description": "בדיקת רשימת חסימה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "add_id_to_list_check_block_list=yes"
+        },
+        {
+          "key": "add_id_to_list_location_list_block",
+          "description": "נתיב לרשימת חסימה",
+          "type": "folder",
+          "required": false,
+          "example": "add_id_to_list_location_list_block=/id2"
         }
       ]
+    },
+
+    "remove_id_from_list": {
+      "name": "הסרת ערך מרשימה",
+      "description": "מודול הסרת מזהי משתמש מרשימה מסויימת",
+      "type_value": "remove_id_from_list",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול הסרת ערך מרשימה",
+          "type": "fixed",
+          "required": true,
+          "value": "remove_id_from_list",
+          "example": "type=remove_id_from_list"
+        },
+        {
+          "key": "remove_id_from_list_location_list",
+          "description": "נתיב לקובץ הרשימה",
+          "type": "folder",
+          "required": true,
+          "example": "remove_id_from_list_location_list=/1/XX.ini"
+        },
+        {
+          "key": "remove_id_from_list_key",
+          "description": "שם המפתח להסרה",
+          "type": "text",
+          "required": true,
+          "example": "remove_id_from_list_key=phone"
+        },
+        {
+          "key": "remove_id_from_list_key_first",
+          "description": "תחילית למפתח",
+          "type": "text",
+          "required": false,
+          "example": "remove_id_from_list_key_first=SIP-"
+        },
+        {
+          "key": "remove_id_from_list_mode",
+          "description": "מצב הסרה (key_only, full)",
+          "type": "enum",
+          "required": false,
+          "values": ["key_only", "full"],
+          "default": "full",
+          "example": "remove_id_from_list_mode=key_only"
+        }
+      ]
+    },
+
+    "time_keeper": {
+      "name": "שעון נוכחות",
+      "description": "מודול ניהול נוכחות/שעות עבודה",
+      "type_value": "time_keeper",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול שעון נוכחות",
+          "type": "fixed",
+          "required": true,
+          "value": "time_keeper",
+          "example": "type=time_keeper"
+        },
+        {
+          "key": "time_keeper_exit_button",
+          "description": "מקש יציאה מדווח נוכחות",
+          "type": "text",
+          "required": false,
+          "example": "time_keeper_exit_button=#"
+        },
+        {
+          "key": "time_keeper_enter_id_number",
+          "description": "אימות לפי מספר טלפון אישי (EnterID)",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "time_keeper_enter_id_number=yes"
+        },
+        {
+          "key": "time_keeper_report_type",
+          "description": "סוג הדיווח (daily, weekly, monthly)",
+          "type": "enum",
+          "required": false,
+          "values": ["daily", "weekly", "monthly"],
+          "default": "daily",
+          "example": "time_keeper_report_type=weekly"
+        }
+      ]
+    },
+
+    "calculator_add_percentage": {
+      "name": "מחשבון אחוזי תוספת",
+      "description": "מודול חישוב אחוזי תוספת",
+      "type_value": "calculator_add_percentage",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול מחשבון אחוזים",
+          "type": "fixed",
+          "required": true,
+          "value": "calculator_add_percentage",
+          "example": "type=calculator_add_percentage"
+        },
+        {
+          "key": "calculator_add_percentage",
+          "description": "שיעור התוספת באחוזים",
+          "type": "number",
+          "required": true,
+          "range": [0, 1000],
+          "example": "calculator_add_percentage=5"
+        }
+      ]
+    },
+
+    "counter_calculator": {
+      "name": "חישוב מונה",
+      "description": "מודול חישוב לפי מונים וכמויות",
+      "type_value": "counter_calculator",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול חישוב מונה",
+          "type": "fixed",
+          "required": true,
+          "value": "counter_calculator",
+          "example": "type=counter_calculator"
+        },
+        {
+          "key": "counter_calculator_unit_price",
+          "description": "מחיר ליחידה",
+          "type": "number",
+          "required": true,
+          "range": [0, 1000000],
+          "example": "counter_calculator_unit_price=1.5"
+        },
+        {
+          "key": "counter_calculator_maintenance_price",
+          "description": "מחיר תחזוקה",
+          "type": "number",
+          "required": true,
+          "range": [0, 1000000],
+          "example": "counter_calculator_maintenance_price=10"
+        },
+        {
+          "key": "say_maintenance_price",
+          "description": "השמעת מחיר תחזוקה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "say_maintenance_price=yes"
+        },
+        {
+          "key": "counter_calculator_open_time",
+          "description": "שעות פעילות (מ-עד)",
+          "type": "text",
+          "required": false,
+          "example": "counter_calculator_open_time=10-20"
+        },
+        {
+          "key": "say_amount_billing_before",
+          "description": "השמעת סכום לפני חיוב",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "say_amount_billing_before=yes"
+        }
+      ]
+    },
+
+    "limit_call_seconds": {
+      "name": "טיימר שיחה",
+      "description": "הגבלת זמן שיחה במטרות",
+      "type_value": "limit_call_seconds",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול הגבלת זמן",
+          "type": "fixed",
+          "required": true,
+          "value": "limit_call_seconds",
+          "example": "type=limit_call_seconds"
+        },
+        {
+          "key": "limit_call_seconds",
+          "description": "הפעלת הגבלת זמן",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "limit_call_seconds=yes"
+        },
+        {
+          "key": "limit_call_seconds_disconnect_time",
+          "description": "זמן לניתוק (בשניות או שעה:דקה:שניות או תאריך מלא או sunset)",
+          "type": "text",
+          "required": true,
+          "example": "limit_call_seconds_disconnect_time=180"
+        },
+        {
+          "key": "limit_call_seconds_ivr_start",
+          "description": "שלוחה ההתחלה לפני ניתוק",
+          "type": "folder",
+          "required": false,
+          "example": "limit_call_seconds_ivr_start=/4/1"
+        },
+        {
+          "key": "limit_call_seconds_end_time_go_to",
+          "description": "שלוחה לניתוק",
+          "type": "folder",
+          "required": false,
+          "example": "limit_call_seconds_end_time_go_to=/5/5"
+        },
+        {
+          "key": "limit_call_seconds_next",
+          "description": "טלפונים מורשים להמשיך ללא הגבלה",
+          "type": "text",
+          "required": false,
+          "example": "limit_call_seconds_next=0771234567,0791234567"
+        }
+      ]
+    },
+
+    "zmanim": {
+      "name": "זמני היום",
+      "description": "מודול השמעת זמני היום היהודי",
+      "type_value": "zmanim",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול זמני היום",
+          "type": "fixed",
+          "required": true,
+          "value": "zmanim",
+          "example": "type=zmanim"
+        },
+        {
+          "key": "zmanim_play_list_message",
+          "description": "השמעת רשימת זמנים במקום הכל",
+          "type": "text",
+          "required": false,
+          "example": "zmanim_play_list_message=zman_shofar,zman_minha"
+        },
+        {
+          "key": "location",
+          "description": "מיקום גיאוגרפי (שם עיר באנגלית)",
+          "type": "text",
+          "required": false,
+          "example": "location=Jerusalem"
+        }
+      ]
+    },
+
+    "say_sabbath_time": {
+      "name": "זמני השבת",
+      "description": "מודול השמעת זמני השבת",
+      "type_value": "say_sabbath_time",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול זמני השבת",
+          "type": "fixed",
+          "required": true,
+          "value": "say_sabbath_time",
+          "example": "type=say_sabbath_time"
+        },
+        {
+          "key": "say_sabbath_time_end_goto",
+          "description": "שלוחה לאחר סיום",
+          "type": "folder",
+          "required": false,
+          "example": "say_sabbath_time_end_goto=/"
+        }
+      ]
+    },
+
+    "say_hour_and_minute": {
+      "name": "השמעת השעה",
+      "description": "מודול השמעת השעה הנוכחית",
+      "type_value": "say_hour_and_minute",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול השעה",
+          "type": "fixed",
+          "required": true,
+          "value": "say_hour_and_minute",
+          "example": "type=say_hour_and_minute"
+        },
+        {
+          "key": "say_hour_and_minute_end_goto",
+          "description": "שלוחה לאחר סיום",
+          "type": "folder",
+          "required": false,
+          "example": "say_hour_and_minute_end_goto=/8"
+        },
+        {
+          "key": "loc",
+          "description": "אזור זמן (פורמט location)",
+          "type": "text",
+          "required": false,
+          "example": "loc=US/NY/New_York"
+        }
+      ]
+    },
+
+    "scheduling_appointments": {
+      "name": "זימון תורים",
+      "description": "מודול קביעת תורים חכמה למגוון פעילויות",
+      "type_value": "scheduling_appointments",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול זימון תורים",
+          "type": "fixed",
+          "required": true,
+          "value": "scheduling_appointments",
+          "example": "type=scheduling_appointments"
+        },
+        {
+          "key": "possible_meeting_times",
+          "description": "ימים ותחום שעות לפגישות",
+          "type": "text",
+          "required": true,
+          "example": "possible_meeting_times=1-12.sun-thu"
+        },
+        {
+          "key": "duration_the_session",
+          "description": "משך הפגישה בדקות",
+          "type": "number",
+          "required": true,
+          "range": [1, 1440],
+          "example": "duration_the_session=15"
+        },
+        {
+          "key": "beginning_meetings_time",
+          "description": "שעת התחלת הפגישות (ארבע ספרות)",
+          "type": "number",
+          "required": true,
+          "range": [0, 2359],
+          "example": "beginning_meetings_time=1200"
+        },
+        {
+          "key": "end_meetings_time",
+          "description": "שעת סיום הפגישות (ארבע ספרות)",
+          "type": "number",
+          "required": true,
+          "range": [0, 2359],
+          "example": "end_meetings_time=1800"
+        },
+        {
+          "key": "scheduling_appointments_queue_menu",
+          "description": "הצגת תפריט תור",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "scheduling_appointments_queue_menu=no"
+        },
+        {
+          "key": "scheduling_appointments_limiting_queues_to_one_only",
+          "description": "הגבלת לקוח לתור אחד בלבד",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "scheduling_appointments_limiting_queues_to_one_only=yes"
+        },
+        {
+          "key": "number_of_days_ahead_that_appointments_can_be_booked",
+          "description": "מספר ימים קדימה לקביעת תור",
+          "type": "number",
+          "required": false,
+          "range": [1, 365],
+          "default": 30,
+          "example": "number_of_days_ahead_that_appointments_can_be_booked=22"
+        },
+        {
+          "key": "scheduling_appointments_recording_name",
+          "description": "הקלטת שם בעל התור",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "scheduling_appointments_recording_name=yes"
+        },
+        {
+          "key": "scheduling_appointments_record_stt_name",
+          "description": "תומלל שם בעל התור לטקסט (לעברית)",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "scheduling_appointments_record_stt_name=yes"
+        },
+        {
+          "key": "scheduling_appointments_record_tts_name",
+          "description": "קריאת שם בעל התור דרך טקסט",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "scheduling_appointments_record_tts_name=yes"
+        },
+        {
+          "key": "scheduling_appointments_meeting_fee",
+          "description": "תשלום עבור התור",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "scheduling_appointments_meeting_fee=yes"
+        },
+        {
+          "key": "scheduling_appointments_meeting_fee_type",
+          "description": "סוג התשלום (credit_card, recording_and_entering_data)",
+          "type": "enum",
+          "required": false,
+          "values": ["credit_card", "recording_and_entering_data"],
+          "example": "scheduling_appointments_meeting_fee_type=credit_card"
+        }
+      ]
+    },
+
+    "number_now_is": {
+      "name": "מספר בתור כעת",
+      "description": "מודול השמעת מספר התור הנוכחי",
+      "type_value": "number_now_is",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול מספר בתור",
+          "type": "fixed",
+          "required": true,
+          "value": "number_now_is",
+          "example": "type=number_now_is"
+        },
+        {
+          "key": "number_now_is",
+          "description": "מספר התור ההתחלתי",
+          "type": "number",
+          "required": true,
+          "range": [1, 999999],
+          "example": "number_now_is=1050"
+        },
+        {
+          "key": "phone_admin_folder",
+          "description": "טלפון מנהל לעדכון מספרים",
+          "type": "text",
+          "required": false,
+          "example": "phone_admin_folder=0501234567"
+        }
+      ]
+    },
+
+    "oref_alerts": {
+      "name": "אזעקות בצפון",
+      "description": "מודול קבלת אזעקות בצפון",
+      "type_value": "oref_alerts",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול אזעקות צפון",
+          "type": "fixed",
+          "required": true,
+          "value": "oref_alerts",
+          "example": "type=oref_alerts"
+        },
+        {
+          "key": "oref_check",
+          "description": "הפעלת בדיקת אזעקות",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "oref_check=yes"
+        }
+      ]
+    },
+
+    "oref_alerts_quiet_wave": {
+      "name": "אזעקות בצפון - שקט",
+      "description": "מודול קבלת אזעקות צפון עם גל שקט",
+      "type_value": "oref_alerts_quiet_wave",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול אזעקות צפון שקטה",
+          "type": "fixed",
+          "required": true,
+          "value": "oref_alerts_quiet_wave",
+          "example": "type=oref_alerts_quiet_wave"
+        },
+        {
+          "key": "oref_check",
+          "description": "הפעלת בדיקת אזעקות",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "oref_check=yes"
+        }
+      ]
+    },
+
+    "call_api_verification": {
+      "name": "אימות API",
+      "description": "מודול אימות ואפיון API",
+      "type_value": "call_api_verification",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול אימות API",
+          "type": "fixed",
+          "required": true,
+          "value": "call_api_verification",
+          "example": "type=call_api_verification"
+        },
+        {
+          "key": "check_api",
+          "description": "הפעלת אימות API",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "check_api=yes"
+        },
+        {
+          "key": "call_api_link",
+          "description": "כתובת ה-API",
+          "type": "url",
+          "required": false,
+          "example": "call_api_link=http://api.example.com"
+        },
+        {
+          "key": "call_api_type",
+          "description": "סוג הבקשה (POST/GET)",
+          "type": "enum",
+          "required": false,
+          "values": ["POST", "GET"],
+          "default": "POST",
+          "example": "call_api_type=POST"
+        },
+        {
+          "key": "call_api_answer_OK",
+          "description": "מעבר בהצלחה",
+          "type": "folder",
+          "required": false,
+          "example": "call_api_answer_OK=/1"
+        },
+        {
+          "key": "call_api_answer_ERROR",
+          "description": "מעבר בכשל",
+          "type": "folder",
+          "required": false,
+          "example": "call_api_answer_ERROR=/7"
+        },
+        {
+          "key": "GOTO",
+          "description": "יעד כללי",
+          "type": "text",
+          "required": false,
+          "example": "GOTO=XX"
+        }
+      ]
+    },
+
+    "playfile_and_enter_digits_time": {
+      "name": "השמעה עם הקשה לפי זמן",
+      "description": "מודול השמעת קבצים עם אפשרות הקשה בזמן מוגדר",
+      "type_value": "playfile_and_enter_digits_time",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול השמעה עם טיימר",
+          "type": "fixed",
+          "required": true,
+          "value": "playfile_and_enter_digits_time",
+          "example": "type=playfile_and_enter_digits_time"
+        },
+        {
+          "key": "playfile_and_enter_digits_time",
+          "description": "זמן הפעלה (תאריך מלא YYYY-MM-DD-HH-MM-SS)",
+          "type": "text",
+          "required": true,
+          "example": "playfile_and_enter_digits_time=2020-12-07-18-35-29"
+        },
+        {
+          "key": "playfile_and_enter_digits_time_wait_goto",
+          "description": "מעבר אם לא בזמן",
+          "type": "text",
+          "required": false,
+          "example": "playfile_and_enter_digits_time_wait_goto=/5/8"
+        },
+        {
+          "key": "playfile_and_enter_digits_time_tfr_wait_goto",
+          "description": "מעבר בזמן המתנה",
+          "type": "text",
+          "required": false,
+          "example": "playfile_and_enter_digits_time_tfr_wait_goto=/5/8"
+        },
+        {
+          "key": "playfile_and_enter_digits_time_no_time_goto",
+          "description": "מעבר אם לא בזמן",
+          "type": "text",
+          "required": false,
+          "example": "playfile_and_enter_digits_time_no_time_goto=/5/8"
+        },
+        {
+          "key": "playfile_and_enter_digits_time_no_file_goto",
+          "description": "מעבר אם קובץ לא קיים",
+          "type": "text",
+          "required": false,
+          "example": "playfile_and_enter_digits_time_no_file_goto=/5/8"
+        },
+        {
+          "key": "playfile_and_enter_digits_time_add_to_point",
+          "description": "הוספת נקודות",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "playfile_and_enter_digits_time_add_to_point=yes"
+        },
+        {
+          "key": "playfile_and_enter_digits_time_add_to_point_min",
+          "description": "מינימום נקודות",
+          "type": "number",
+          "required": false,
+          "range": [0, 1000],
+          "example": "playfile_and_enter_digits_time_add_to_point_min=50"
+        },
+        {
+          "key": "playfile_and_enter_digits_time_add_to_point_amount",
+          "description": "כמות נקודות",
+          "type": "number",
+          "required": false,
+          "range": [0, 1000],
+          "example": "playfile_and_enter_digits_time_add_to_point_amount=15"
+        },
+        {
+          "key": "playfile_and_enter_digits_time_success_goto",
+          "description": "מעבר בהצלחה",
+          "type": "text",
+          "required": false,
+          "example": "playfile_and_enter_digits_time_success_goto=/5/8"
+        },
+        {
+          "key": "playfile_and_enter_digits_time_end_goto",
+          "description": "מעבר בסיום",
+          "type": "text",
+          "required": false,
+          "example": "playfile_and_enter_digits_time_end_goto=/5/8"
+        },
+        {
+          "key": "playfile_and_enter_digits_time_return_goto",
+          "description": "מעבר חזרה",
+          "type": "text",
+          "required": false,
+          "example": "playfile_and_enter_digits_time_return_goto=/5/8"
+        },
+        {
+          "key": "playfile_and_enter_digits_time_1_goto",
+          "description": "מעבר בהקשה 1",
+          "type": "text",
+          "required": false,
+          "example": "playfile_and_enter_digits_time_1_goto=/5/8"
+        },
+        {
+          "key": "playfile_and_enter_digits_time_block_double",
+          "description": "חסימת כפירות (נתיב קובץ לוג)",
+          "type": "text",
+          "required": false,
+          "example": "playfile_and_enter_digits_time_block_double=/8/6/PlayfileAndEnterDigitsTimeLogOK.2020-12-09-15-04-00"
+        }
+      ]
+    },
+
+    "playdir_time": {
+      "name": "השמעת תיקיות לפי זמן",
+      "description": "מודול השמעת תיקיות בקבצים לפי זמן",
+      "type_value": "playdir_time",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול השמעה לפי זמן",
+          "type": "fixed",
+          "required": true,
+          "value": "playdir_time",
+          "example": "type=playdir_time"
+        },
+        {
+          "key": "playdir_time_type",
+          "description": "סוג ההשמעה (admin)",
+          "type": "enum",
+          "required": false,
+          "values": ["admin"],
+          "example": "playdir_time_type=admin"
+        },
+        {
+          "key": "playdir_time_dir_toplay",
+          "description": "נתיב התיקיה להשמעה",
+          "type": "folder",
+          "required": false,
+          "example": "playdir_time_dir_toplay=/5/8"
+        },
+        {
+          "key": "password",
+          "description": "סיסמה למנהל",
+          "type": "text",
+          "required": false,
+          "example": "password=1234"
+        },
+        {
+          "key": "playdir_time_admin_record_ok_end_goto",
+          "description": "מעבר בסיום הקלטה",
+          "type": "text",
+          "required": false,
+          "example": "playdir_time_admin_record_ok_end_goto=/5/8"
+        }
+      ]
+    },
+
+    "playfile_time": {
+      "name": "השמעת קובץ בזמן מוגדר",
+      "description": "מודול השמעת קובץ בזמן מתוזמן מדוייק",
+      "type_value": "playfile_time",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול השמעה מתוזמנת",
+          "type": "fixed",
+          "required": true,
+          "value": "playfile_time",
+          "example": "type=playfile_time"
+        },
+        {
+          "key": "playfile_time",
+          "description": "זמן הפעלה (YYYY-MM-DD-HH-MM-SS)",
+          "type": "text",
+          "required": true,
+          "example": "playfile_time=2018-08-01-07-30-35"
+        },
+        {
+          "key": "playfile_time_file_toplay",
+          "description": "נתיב הקובץ להשמעה",
+          "type": "text",
+          "required": true,
+          "example": "playfile_time_file_toplay=/5/8/000"
+        },
+        {
+          "key": "playfile_time_wait_goto",
+          "description": "מעבר אם המתנה",
+          "type": "text",
+          "required": false,
+          "example": "playfile_time_wait_goto=/5/8"
+        },
+        {
+          "key": "playfile_time_tfr_wait_goto",
+          "description": "מעבר בהמתנה",
+          "type": "text",
+          "required": false,
+          "example": "playfile_time_tfr_wait_goto=/5/8"
+        },
+        {
+          "key": "playfile_time_no_time_goto",
+          "description": "מעבר אם לא בזמן",
+          "type": "text",
+          "required": false,
+          "example": "playfile_time_no_time_goto=/5/8"
+        },
+        {
+          "key": "playfile_time_no_file_goto",
+          "description": "מעבר אם קובץ לא קיים",
+          "type": "text",
+          "required": false,
+          "example": "playfile_time_no_file_goto=/5/8"
+        },
+        {
+          "key": "playfile_time_end_goto",
+          "description": "מעבר בסיום",
+          "type": "text",
+          "required": false,
+          "example": "playfile_time_end_goto=/5/8"
+        },
+        {
+          "key": "playfile_time_success_goto",
+          "description": "מעבר בהצלחה",
+          "type": "text",
+          "required": false,
+          "example": "playfile_time_success_goto=/5/8"
+        },
+        {
+          "key": "playfile_time_return_goto",
+          "description": "מעבר חזרה",
+          "type": "text",
+          "required": false,
+          "example": "playfile_time_return_goto=/5/8"
+        }
+      ]
+    },
+
+    "confbridge": {
+      "name": "חדר ועידה",
+      "description": "מודול חדר ועידה וקונפרנס בצ'אט",
+      "type_value": "confbridge",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול חדר ועידה",
+          "type": "fixed",
+          "required": true,
+          "value": "confbridge",
+          "example": "type=confbridge"
+        },
+        {
+          "key": "folder_to_play",
+          "description": "תיקיה להשמעה בכניסה",
+          "type": "folder",
+          "required": false,
+          "example": "folder_to_play=/1"
+        },
+        {
+          "key": "record_title",
+          "description": "הקלטת כותרת לחדר",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "record_title=yes"
+        },
+        {
+          "key": "conf_bridge_admin_record_folder",
+          "description": "תיקיה להקלטת מנהל",
+          "type": "folder",
+          "required": false,
+          "example": "conf_bridge_admin_record_folder=/5/8"
+        },
+        {
+          "key": "conf_bridge_admin_record_serial",
+          "description": "הקלטה רציפה למנהל",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "conf_bridge_admin_record_serial=yes"
+        }
+      ]
+    },
+
+    "toplay_time": {
+      "name": "השמעת הודעות מתוזמנות",
+      "description": "מודול השמעת הודעות בזמנים מוגדרים מתקדמים",
+      "type_value": "toplay_time",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול השמעה מתוזמנת",
+          "type": "fixed",
+          "required": true,
+          "value": "toplay_time",
+          "example": "type=toplay_time"
+        },
+        {
+          "key": "toplay_time_1",
+          "description": "כלל תזמון (פורמט: ימים שעות תאריך טווח זמן-ספירה-יחידות זמן",
+          "type": "text",
+          "required": false,
+          "example": "toplay_time_1=g.09:00-17:00.mon-fri.01-20.jun-jun.2015-2015.30m.9.5d"
+        }
+      ]
+    },
+
+    "id_list_message": {
+      "name": "רשימת הודעות אישיות",
+      "description": "מודול הצגת הודעות לפי מזהה יחודי",
+      "type_value": "id_list_message",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול רשימת הודעות",
+          "type": "fixed",
+          "required": true,
+          "value": "id_list_message",
+          "example": "type=id_list_message"
+        }
+      ]
+    },
+
+    "id_message": {
+      "name": "הודעה אישית",
+      "description": "מודול הצגת הודעה אישית",
+      "type_value": "id_message",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול הודעה אישית",
+          "type": "fixed",
+          "required": true,
+          "value": "id_message",
+          "example": "type=id_message"
+        }
+      ]
+    },
+
+    "say_dialing_number": {
+      "name": "השמעת מספר מחייג",
+      "description": "מודול השמעת מספר הטלפון של המחייג",
+      "type_value": "say_dialing_number",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול השמעת מספר",
+          "type": "fixed",
+          "required": true,
+          "value": "say_dialing_number",
+          "example": "type=say_dialing_number"
+        },
+        {
+          "key": "say_dialing_number_end_goto",
+          "description": "מעבר לאחר השמעה",
+          "type": "folder",
+          "required": false,
+          "example": "say_dialing_number_end_goto=/1"
+        },
+        {
+          "key": "say_dialing_number_error_goto",
+          "description": "מעבר בשגיאה",
+          "type": "folder",
+          "required": false,
+          "example": "say_dialing_number_error_goto=/2"
+        }
+      ]
+    },
+
+    "play_and_return": {
+      "name": "השמעה וחזרה",
+      "description": "מודול השמעת קובץ ללא אפשרות דפדוף",
+      "type_value": "play_and_return",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול השמעה וחזרה",
+          "type": "fixed",
+          "required": true,
+          "value": "play_and_return",
+          "example": "type=play_and_return"
+        }
+      ]
+    },
+
+    "record_system_messages": {
+      "name": "הקלטת הודעות מערכת",
+      "description": "מודול הקלטת הודעות מערכת וסאונד",
+      "type_value": "record_system_messages",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול הקלטת הודעות מערכת",
+          "type": "fixed",
+          "required": true,
+          "value": "record_system_messages",
+          "example": "type=record_system_messages"
+        },
+        {
+          "key": "record_system_folder",
+          "description": "תיקיה לשמירת ההודעות",
+          "type": "text",
+          "required": false,
+          "example": "record_system_folder=/8/8"
+        },
+        {
+          "key": "record_system_messages",
+          "description": "מזהה ההודעה להקלטה",
+          "type": "text",
+          "required": true,
+          "example": "record_system_messages=M1000"
+        },
+        {
+          "key": "say_record_number",
+          "description": "השמעת מספר הקובץ",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "say_record_number=no"
+        },
+        {
+          "key": "record_system_messages_end_goto",
+          "description": "מעבר בסיום",
+          "type": "folder",
+          "required": false,
+          "example": "record_system_messages_end_goto=/5"
+        },
+        {
+          "key": "record_system_messages_plus",
+          "description": "הוספת הודעה נוספת",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "record_system_messages_plus=yes"
+        }
+      ]
+    },
+
+    "clicks": {
+      "name": "משחק קליקרים",
+      "description": "מודול משחק קליקרים עם השמעת קבצים",
+      "type_value": "clicks",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול משחק קליקרים",
+          "type": "fixed",
+          "required": true,
+          "value": "clicks",
+          "example": "type=clicks"
+        }
+      ]
+    },
+
+    "hangup": {
+      "name": "ניתוק שיחה",
+      "description": "מודול ניתוק שיחה",
+      "type_value": "hangup",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול ניתוק",
+          "type": "fixed",
+          "required": true,
+          "value": "hangup",
+          "example": "type=hangup"
+        }
+      ]
+    },
+
+    "points_and_rating": {
+      "name": "נקודות ודירוג",
+      "description": "מודול ניהול נקודות עם דירוג בעל עסק",
+      "type_value": "points_and_rating",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול נקודות ודירוג",
+          "type": "fixed",
+          "required": true,
+          "value": "points_and_rating",
+          "example": "type=points_and_rating"
+        }
+      ]
+    },
+
+    "points_say_total": {
+      "name": "השמעת נקודות",
+      "description": "מודול השמעת כמות הנקודות שיש למשתמש",
+      "type_value": "points_say_total",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול השמעת נקודות",
+          "type": "fixed",
+          "required": true,
+          "value": "points_say_total",
+          "example": "type=points_say_total"
+        },
+        {
+          "key": "say_points_group",
+          "description": "השמעת נקודות לקבוצה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "say_points_group=yes"
+        },
+        {
+          "key": "add_to_points_total",
+          "description": "הוספת נקודות לסה״כ",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "add_to_points_total=yes"
+        },
+        {
+          "key": "say_only_add_to_points_total",
+          "description": "השמעה בלבד ללא הוספה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "say_only_add_to_points_total=yes"
+        },
+        {
+          "key": "say_points_best",
+          "description": "השמעת X המשתמשים בעלי הכי הרבה נקודות",
+          "type": "number",
+          "required": false,
+          "range": [1, 100],
+          "example": "say_points_best=5"
+        },
+        {
+          "key": "say_points",
+          "description": "השמעת נקודות סה״כ",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "say_points=yes"
+        },
+        {
+          "key": "say_rank",
+          "description": "השמעת דירוג המשתמש",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "say_rank=yes"
+        }
+      ]
+    },
+
+    "points_save": {
+      "name": "שמירת נקודות",
+      "description": "מודול שמירת ואיסוף נקודות למשתמשים",
+      "type_value": "points_save",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול שמירת נקודות",
+          "type": "fixed",
+          "required": true,
+          "value": "points_save",
+          "example": "type=points_save"
+        }
+      ]
+    },
+
+    "points_to_other_id": {
+      "name": "הוספת נקודות למשתמש אחר",
+      "description": "מודול מתן נקודות למשתמשים אחרים",
+      "type_value": "points_to_other_id",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול הוספת נקודות לאחר",
+          "type": "fixed",
+          "required": true,
+          "value": "points_to_other_id",
+          "example": "type=points_to_other_id"
+        }
+      ]
+    },
+
+    "points_edit": {
+      "name": "עריכת נקודות",
+      "description": "מודול עריכת נקודות למשתמשים על ידי מנהלים",
+      "type_value": "points_edit",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול עריכת נקודות",
+          "type": "fixed",
+          "required": true,
+          "value": "points_edit",
+          "example": "type=points_edit"
+        }
+      ]
+    },
+
+    "last_play": {
+      "name": "חזרה למיקום אחרון",
+      "description": "מודול חזרה למיקום אחרון שנעצר בהשמעה",
+      "type_value": "last_play",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול חזרה למיקום אחרון",
+          "type": "fixed",
+          "required": true,
+          "value": "last_play",
+          "example": "type=last_play"
+        },
+        {
+          "key": "say_last_play_location",
+          "description": "השמעת המיקום והזמן האחרון",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "say_last_play_location=yes"
+        }
+      ]
+    },
+
+    "checking_units": {
+      "name": "בדיקת יחידות",
+      "description": "מודול בדיקת יתרת יחידות ותוקף",
+      "type_value": "checking_units",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול בדיקת יחידות",
+          "type": "fixed",
+          "required": true,
+          "value": "checking_units",
+          "example": "type=checking_units"
+        }
+      ]
+    },
+
+    "study_tracking": {
+      "name": "מעקב לימודים",
+      "description": "מודול מעקב אחר התקדמות לימודים",
+      "type_value": "study_tracking",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול מעקב לימודים",
+          "type": "fixed",
+          "required": true,
+          "value": "study_tracking",
+          "example": "type=study_tracking"
+        }
+      ]
+    },
+
+    "get_brachot": {
+      "name": "מונה ברכות יומי",
+      "description": "מודול ניהול ברכות יומיות",
+      "type_value": "get_brachot",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול ברכות יומי",
+          "type": "fixed",
+          "required": true,
+          "value": "get_brachot",
+          "example": "type=get_brachot"
+        }
+      ]
+    },
+
+    "coupon": {
+      "name": "חלוקת קופונים",
+      "description": "מודול חלוקה אוטומטית של קופונים",
+      "type_value": "coupon",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול קופונים",
+          "type": "fixed",
+          "required": true,
+          "value": "coupon",
+          "example": "type=coupon"
+        },
+        {
+          "key": "email_address",
+          "description": "כתובת מייל לשליחה",
+          "type": "text",
+          "required": false,
+          "example": "email_address=AAA@gmail.com"
+        },
+        {
+          "key": "email_name",
+          "description": "שם השולח במייל",
+          "type": "text",
+          "required": false,
+          "example": "email_name=avraem"
+        }
+      ]
+    },
+
+    "codes": {
+      "name": "חלוקת קודים",
+      "description": "מודול חלוקה אוטומטית של קודים",
+      "type_value": "codes",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול קודים",
+          "type": "fixed",
+          "required": true,
+          "value": "codes",
+          "example": "type=codes"
+        }
+      ]
+    },
+
+    "chapter_receive": {
+      "name": "חלוקת פרקים - תהילים, גמרא, משניות",
+      "description": "מודול חלוקה אוטומטית של פרקי תהילים, גמרא, משניות ואחרים",
+      "type_value": "chapter_receive",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול חלוקת פרקים",
+          "type": "fixed",
+          "required": true,
+          "value": "chapter_receive",
+          "example": "type=chapter_receive"
+        },
+        {
+          "key": "chapter_plus",
+          "description": "כמות פרקים לחלק כל פעם (ברירת מחדל 2)",
+          "type": "number",
+          "required": false,
+          "range": [1, 1000],
+          "default": 2,
+          "example": "chapter_plus=1"
+        },
+        {
+          "key": "chapter_plus_tfr",
+          "description": "לאפשר ללקוח לבחור כמות פרקים",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "chapter_plus_tfr=yes"
+        },
+        {
+          "key": "chapter_end",
+          "description": "פרק אחרון לחלוקה לפני המחזור הבא",
+          "type": "number",
+          "required": false,
+          "range": [1, 10000],
+          "example": "chapter_end=10"
+        },
+        {
+          "key": "receive_type",
+          "description": "סוג החלוקה (perek, parash, sefer, tikun, page, gemara, mishnah, mishnah_perek, pitum_haketoret, continuous_hours)",
+          "type": "enum",
+          "required": true,
+          "values": ["perek", "parash", "sefer", "tikun", "page", "gemara", "mishnah", "mishnah_perek", "pitum_haketoret", "continuous_hours"],
+          "default": "perek",
+          "example": "receive_type=gamara"
+        },
+        {
+          "key": "chapter_say",
+          "description": "איך להגיד מספרי פרקים (letters, number)",
+          "type": "enum",
+          "required": false,
+          "values": ["letters", "number"],
+          "default": "letters",
+          "example": "chapter_say=number"
+        },
+        {
+          "key": "say_thilim",
+          "description": "השמעת פסוקי תהילים",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "say_thilim=no"
+        },
+        {
+          "key": "say_thilim_type",
+          "description": "סוג נוסח תהילים (sefard, ashkenaz, tfr)",
+          "type": "enum",
+          "required": false,
+          "values": ["sefard", "ashkenaz", "tfr"],
+          "default": "tfr",
+          "example": "say_thilim_type=sefard"
+        },
+        {
+          "key": "say_gemara",
+          "description": "השמעת לימוד גמרא",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "say_gemara=no"
+        },
+        {
+          "key": "say_mishnah_perek",
+          "description": "השמעת משניות באופן קולי",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "say_mishnah_perek=no"
+        },
+        {
+          "key": "chapter_receive_end_goto",
+          "description": "מעבר בסיום חלוקת פרקים",
+          "type": "folder",
+          "required": false,
+          "example": "chapter_receive_end_goto=/8"
+        },
+        {
+          "key": "chapter_complete",
+          "description": "מספר מחזור החלוקה (מתחיל ב0)",
+          "type": "number",
+          "required": false,
+          "range": [0, 1000],
+          "default": 0,
+          "example": "chapter_complete=1"
+        },
+        {
+          "key": "chapter",
+          "description": "פרק הבא לתור חלוקה (מתחיל ב1)",
+          "type": "number",
+          "required": false,
+          "range": [1, 10000],
+          "default": 1,
+          "example": "chapter=2"
+        },
+        {
+          "key": "say_chapter_complete",
+          "description": "השמעת מספר כמה חולקו עד כה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "say_chapter_complete=no"
+        },
+        {
+          "key": "chapter_receive_Tehillim_IDF_casualties",
+          "description": "הוספת שם חלל צה״ל בתפילה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "chapter_receive_Tehillim_IDF_casualties=yes"
+        },
+        {
+          "key": "chapter_tfr_more",
+          "description": "תפריט לתת עוד פרקים",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "chapter_tfr_more=no"
+        },
+        {
+          "key": "page_chapter_1_end",
+          "description": "עמוד אחרון בפרק 1 (עבור חלוקת עמודים)",
+          "type": "number",
+          "required": false,
+          "range": [1, 10000],
+          "example": "page_chapter_1_end=15"
+        },
+        {
+          "key": "page_chapter_2_end",
+          "description": "עמוד אחרון בפרק 2",
+          "type": "number",
+          "required": false,
+          "range": [1, 10000],
+          "example": "page_chapter_2_end=20"
+        },
+        {
+          "key": "page_book_complete",
+          "description": "מספר ספרים שהושלמו",
+          "type": "number",
+          "required": false,
+          "range": [0, 1000],
+          "default": 0,
+          "example": "page_book_complete=1"
+        },
+        {
+          "key": "page_chapter_now",
+          "description": "פרק נוכחי (מתחיל ב1)",
+          "type": "number",
+          "required": false,
+          "range": [1, 1000],
+          "default": 1,
+          "example": "page_chapter_now=1"
+        },
+        {
+          "key": "page_page_now",
+          "description": "עמוד נוכחי (מתחיל ב1)",
+          "type": "number",
+          "required": false,
+          "range": [1, 10000],
+          "default": 1,
+          "example": "page_page_now=1"
+        }
+      ]
+    },
+
+    "approval_number": {
+      "name": "חלוקת מספרי אישור",
+      "description": "מודול חלוקה אוטומטית של מספרי אישור",
+      "type_value": "approval_number",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול אישורים",
+          "type": "fixed",
+          "required": true,
+          "value": "approval_number",
+          "example": "type=approval_number"
+        },
+        {
+          "key": "say_approval_number",
+          "description": "השמעת מספר אישור (say_approval_no_number, no)",
+          "type": "enum",
+          "required": false,
+          "values": ["say_approval_no_number", "no"],
+          "default": "say_approval_no_number",
+          "example": "say_approval_number=no"
+        }
+      ]
+    },
+
+    "tehillim_select_save_and_listen": {
+      "name": "בחירה ושמירה של פרקי תהילים",
+      "description": "מודול בחירה של פרק תהילים קבוע והשמעתו",
+      "type_value": "tehillim_select_save_and_listen",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול תהילים אישי",
+          "type": "fixed",
+          "required": true,
+          "value": "tehillim_select_save_and_listen",
+          "example": "type=tehillim_select_save_and_listen"
+        },
+        {
+          "key": "say_thilim_type",
+          "description": "סוג נוסח תהילים (sefard, ashkenaz, tfr)",
+          "type": "enum",
+          "required": false,
+          "values": ["sefard", "ashkenaz", "tfr"],
+          "default": "tfr",
+          "example": "say_thilim_type=sefard"
+        }
+      ]
+    },
+
+    "tzintuk": {
+      "name": "צינתוקים במערכת תוכן (IVR) ללא עלות יחידות",
+      "description": "מודול ניהול צינתוקים עם אפשרות מעבר בין שלוחות חריגות",
+      "type_value": "tzintuk",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול צינתוק",
+          "type": "fixed",
+          "required": true,
+          "value": "tzintuk",
+          "example": "type=tzintuk"
+        },
+        {
+          "key": "list_tzintuk",
+          "description": "רשימת מספרי צינתוקים (123 = משתנה לפי המצב)",
+          "type": "text",
+          "required": false,
+          "example": "list_tzintuk=123"
+        },
+        {
+          "key": "say_members_only",
+          "description": "השמעת הודעת 'מיועד לחברים בלבד'",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "say_members_only=yes"
+        },
+        {
+          "key": "tzintuk_admin",
+          "description": "הפעלת מצב מנהל לצינתוק",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "tzintuk_admin=yes"
+        }
+      ]
+    },
+
+    "send_fax_new": {
+      "name": "שליחת פקס חדש",
+      "description": "מודול_asset שליחת פקסים עם הקלטת מספר היעד ושם הנמען",
+      "type_value": "send_fax_new",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול שליחת פקס",
+          "type": "fixed",
+          "required": true,
+          "value": "send_fax_new",
+          "example": "type=send_fax_new"
+        }
+      ]
+    },
+
+    "recv_fax": {
+      "name": "קבלת פקס",
+      "description": "מודול קבלת פקסים עם שליחת דוא״ל אוטומטית",
+      "type_value": "recv_fax",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול קבלת פקס",
+          "type": "fixed",
+          "required": true,
+          "value": "recv_fax",
+          "example": "type=recv_fax"
+        },
+        {
+          "key": "set_ok_send_mail",
+          "description": "שליחת מייל אישור לאחר קבלת פקס",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "set_ok_send_mail=yes"
+        }
+      ]
+    },
+
+    "tasks_report": {
+      "name": "דיווח משימות יומי",
+      "description": "מודול דיווח משימות יומיות עם אפשרויות דיווח שונות",
+      "type_value": "tasks_report",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול דיווח משימות",
+          "type": "fixed",
+          "required": true,
+          "value": "tasks_report",
+          "example": "type=tasks_report"
+        },
+        {
+          "key": "tasks_report_type",
+          "description": "סוג הדיווח (is_assignment_finished, read_all_non_finished, send_to_mail, send_to_mail_someday)",
+          "type": "enum",
+          "required": false,
+          "values": ["is_assignment_finished", "read_all_non_finished", "send_to_mail", "send_to_mail_someday"],
+          "example": "tasks_report_type=is_assignment_finished"
+        },
+        {
+          "key": "set_ok_send_mail",
+          "description": "שליחת מייל דיווח",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "set_ok_send_mail=yes"
+        }
+      ]
+    },
+
+    "examination": {
+      "name": "מודול מבחן",
+      "description": "מודול ביצוע מבחנים כללי",
+      "type_value": "examination",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול מבחן",
+          "type": "fixed",
+          "required": true,
+          "value": "examination",
+          "example": "type=examination"
+        }
+      ]
+    },
+
+    "examination_american": {
+      "name": "מבחן אמריקאי",
+      "description": "מודול מבחן אמריקאי סגור עם שפיות תשובות",
+      "type_value": "examination_american",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול מבחן אמריקאי",
+          "type": "fixed",
+          "required": true,
+          "value": "examination_american",
+          "example": "type=examination_american"
+        }
+      ]
+    },
+
+    "trivia_questions": {
+      "name": "שאלות טריוויה",
+      "description": "מודול שאלות טריוויה עם או בלי הקלטת תשובות",
+      "type_value": "trivia_questions",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול טריוויה",
+          "type": "fixed",
+          "required": true,
+          "value": "trivia_questions",
+          "example": "type=trivia_questions"
+        },
+        {
+          "key": "trivia_questions_sub_folders",
+          "description": "שימוש בתיקיות משנה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "trivia_questions_sub_folders=yes"
+        },
+        {
+          "key": "trivia_type",
+          "description": "סוג טריוויה (admin)",
+          "type": "enum",
+          "required": false,
+          "values": ["admin"],
+          "example": "trivia_type=admin"
+        },
+        {
+          "key": "record_trivia_american",
+          "description": "הקלטת מבחן אמריקאי",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "record_trivia_american=yes"
+        },
+        {
+          "key": "record_trivia_yes_no",
+          "description": "הקלטת שאלות נכון/לא נכון",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "record_trivia_yes_no=yes"
+        }
+      ]
+    },
+
+    "seker": {
+      "name": "מודול סקר עם השמעת תוצאות",
+      "description": "מודול סקר עם השמעת תוצאות בזמן אמת",
+      "type_value": "seker",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול סקר",
+          "type": "fixed",
+          "required": true,
+          "value": "seker",
+          "example": "type=seker"
+        }
+      ]
+    },
+
+    "seker_questions": {
+      "name": "מודול סקר החדש",
+      "description": "מודול סקר חדש עם אפשרויות הרחבה",
+      "type_value": "seker_questions",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול סקר חדש",
+          "type": "fixed",
+          "required": true,
+          "value": "seker_questions",
+          "example": "type=seker_questions"
+        },
+        {
+          "key": "say_q_number",
+          "description": "השמעת מספר השאלה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "say_q_number=no"
+        },
+        {
+          "key": "say_results",
+          "description": "השמעת תוצאות (?, no)",
+          "type": "enum",
+          "required": false,
+          "values": ["?", "no"],
+          "default": "no",
+          "example": "say_results=no"
+        },
+        {
+          "key": "say_participants",
+          "description": "השמעת מספר משתתפים",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "say_participants=no"
+        },
+        {
+          "key": "seker_questions_admin",
+          "description": "הפעלת מצב מנהל",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "seker_questions_admin=yes"
+        }
+      ]
+    },
+
+    "daily_message": {
+      "name": "הודעה יומית מתחלפת",
+      "description": "מודול הודעה יומית עם מעבר לשלוחה",
+      "type_value": "daily_message",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול הודעה יומית",
+          "type": "fixed",
+          "required": true,
+          "value": "daily_message",
+          "example": "type=daily_message"
+        }
+      ]
+    },
+
+    "change_admin_password": {
+      "name": "שינוי סיסמת ניהול",
+      "description": "מודול שינוי סיסמת הניהול של המשתמש",
+      "type_value": "change_admin_password",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול שינוי סיסמת ניהול",
+          "type": "fixed",
+          "required": true,
+          "value": "change_admin_password",
+          "example": "type=change_admin_password"
+        }
+      ]
+    },
+
+    "change_record_password": {
+      "name": "שינוי סיסמת הקלטות",
+      "description": "מודול שינוי סיסמת הקלטות של המשתמש",
+      "type_value": "change_record_password",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול שינוי סיסמת הקלטות",
+          "type": "fixed",
+          "required": true,
+          "value": "change_record_password",
+          "example": "type=change_record_password"
+        },
+        {
+          "key": "change_record_password_end_goto",
+          "description": "מעבר לאחר שינוי סיסמה",
+          "type": "folder",
+          "required": false,
+          "example": "change_record_password_end_goto=/1/1"
+        }
+      ]
+    },
+
+    "change_access_password": {
+      "name": "שינוי סיסמת גישה",
+      "description": "מודול שינוי סיסמת הגישה של המשתמש",
+      "type_value": "change_access_password",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול שינוי סיסמת גישה",
+          "type": "fixed",
+          "required": true,
+          "value": "change_access_password",
+          "example": "type=change_access_password"
+        }
+      ]
+    },
+
+    "change_extension_password": {
+      "name": "שינוי סיסמה לשלוחה",
+      "description": "מודול שינוי סיסמה לשלוחה ספציפית",
+      "type_value": "change_extension_password",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול שינוי סיסמה לשלוחה",
+          "type": "fixed",
+          "required": true,
+          "value": "change_extension_password",
+          "example": "type=change_extension_password"
+        }
+      ]
+    },
+
+    "change_enter_id_password": {
+      "name": "שינוי סיסמה אישית",
+      "description": "מודול שינוי סיסמה אישית לכל משתמש",
+      "type_value": "change_enter_id_password",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול שינוי סיסמה אישית",
+          "type": "fixed",
+          "required": true,
+          "value": "change_enter_id_password",
+          "example": "type=change_enter_id_password"
+        }
+      ]
+    },
+
+    "password": {
+      "name": "סיסמה לשלוחה",
+      "description": "הגדרת סיסמה לשלוחה עם אפשרויות שונות",
+      "type_value": "password",
+      "settings": [
+        {
+          "key": "password",
+          "description": "הגדרת סיסמה לשלוחה",
+          "type": "text",
+          "required": false,
+          "example": "password=1234"
+        },
+        {
+          "key": "password_admin",
+          "description": "סיסמת מנהל",
+          "type": "text",
+          "required": false,
+          "example": "password=password_admin"
+        },
+        {
+          "key": "password_record",
+          "description": "סיסמת הקלטות",
+          "type": "text",
+          "required": false,
+          "example": "password=password_record"
+        },
+        {
+          "key": "password_always_required",
+          "description": "דרישת סיסמה תמיד",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "password_always_required=yes"
+        },
+        {
+          "key": "password_error_goto",
+          "description": "מעבר בשגיאת סיסמה (hangup או מסלול)",
+          "type": "folder",
+          "required": false,
+          "example": "password_error_goto=hangup"
+        },
+        {
+          "key": "password_log_save",
+          "description": "שמירת לוג נסיונות הקשה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "password_log_save=yes"
+        },
+        {
+          "key": "password_after_check_phone",
+          "description": "סיסמה לאחר בדיקת מספר ישראלי",
+          "type": "text",
+          "required": false,
+          "example": "password_after_check_phone=1234"
+        },
+        {
+          "key": "after_check_phone_error_check_password",
+          "description": "בדיקת סיסמה אם מספר לא ישראלי",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "after_check_phone_error_check_password=yes"
+        },
+        {
+          "key": "password_error_go_to_foldar",
+          "description": "מעבר בשגיאת סיסמה בשונה משלב אחד אחורה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "password_error_go_to_foldar=yes"
+        },
+        {
+          "key": "after_check_phone_error_go_to_foldar",
+          "description": "מעבר כאשר מספר לא ישראלי &סיסמה נכונה",
+          "type": "folder",
+          "required": false,
+          "example": "after_check_phone_error_go_to_foldar=/1"
+        },
+        {
+          "key": "password_after_check_phone_log_save",
+          "description": "שמירת נסיונות הקשה בסיסמה לאחר בדיקת מספר",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "password_after_check_phone_log_save=yes"
+        }
+      ]
+    },
+
+    "black_no_phone": {
+      "name": "חסימת מספרים ללא זיהוי",
+      "description": "חסימת מספרים שלא מזוהים (לא ברורים, או חסוי)",
+      "type_value": "black_no_phone",
+      "settings": [
+        {
+          "key": "black_no_phone",
+          "description": "הפעלת חסימה למספרים ללא זיהוי",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "black_no_phone=yes"
+        },
+        {
+          "key": "black_no_phone_goto",
+          "description": "מעבר כאשר מספר לא מזוהה (hangup או מסלול)",
+          "type": "folder",
+          "required": false,
+          "example": "black_no_phone_goto=hangup"
+        }
+      ]
+    },
+
+    "white_list": {
+      "name": "רשימה לבנה",
+      "description": "הגדרת רשימת מספרים מורשים לגישה לשלוחה",
+      "type_value": "white_list",
+      "settings": [
+        {
+          "key": "white_list",
+          "description": "הפעלת רשימה לבנה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "white_list=yes"
+        },
+        {
+          "key": "white_list_folder",
+          "description": "נתיב לתיקית הרשימה הלבנה",
+          "type": "folder",
+          "required": false,
+          "example": "white_list_folder=/1/1"
+        },
+        {
+          "key": "white_list_type",
+          "description": "סוג רשימת לבנה (template_default, template_number)",
+          "type": "enum",
+          "required": false,
+          "values": ["template_default", "template_number"],
+          "example": "white_list_type=template_default"
+        },
+        {
+          "key": "white_list_template_number",
+          "description": "מספר התבנית אם נבחר template_number",
+          "type": "text",
+          "required": false,
+          "example": "white_list_template_number=default/1/2/3"
+        },
+        {
+          "key": "white_list_error_goto",
+          "description": "מעבר כאשר מספר לא ברשימה לבנה",
+          "type": "folder",
+          "required": false,
+          "example": "white_list_error_goto=hangup"
+        }
+      ]
+    },
+
+    "black_list": {
+      "name": "רשימה שחורה",
+      "description": "הגדרת רשימת מספרים חסומים לגישה לשלוחה",
+      "type_value": "black_list",
+      "settings": [
+        {
+          "key": "black_list",
+          "description": "הפעלת רשימה שחורה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "black_list=yes"
+        },
+        {
+          "key": "black_list_folder",
+          "description": "נתיב לתיקית הרשימה השחורה",
+          "type": "folder",
+          "required": false,
+          "example": "black_list_folder=/1/1"
+        },
+        {
+          "key": "black_list_error_goto",
+          "description": "מעבר כאשר מספר ברשימה שחורה",
+          "type": "folder",
+          "required": false,
+          "example": "black_list_error_goto=hangup"
+        }
+      ]
+    },
+
+    "check_phone_number": {
+      "name": "בדיקת מספר טלפון ישראלי",
+      "description": "בדיקה האם מספר הטלפון הוא ישראלי או לא",
+      "type_value": "check_phone_number",
+      "settings": [
+        {
+          "key": "check_phone_number",
+          "description": "הפעלת בדיקת מספר ישראלי",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "check_phone_number=yes"
+        },
+        {
+          "key": "after_check_phone_error_check_password",
+          "description": "בדיקת סיסמה אם מספר לא ישראלי",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "after_check_phone_error_check_password=yes"
+        },
+        {
+          "key": "password_after_check_phone",
+          "description": "סיסמה לבדיקת זהות",
+          "type": "text",
+          "required": false,
+          "example": "password_after_check_phone=1234"
+        },
+        {
+          "key": "password_error_go_to_foldar",
+          "description": "מעבר בסיסמה לא נכונה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "password_error_go_to_foldar=yes"
+        },
+        {
+          "key": "after_check_phone_error_go_to_foldar",
+          "description": "מעבר ללא ישראלים",
+          "type": "folder",
+          "required": false,
+          "example": "after_check_phone_error_go_to_foldar=/1"
+        },
+        {
+          "key": "password_after_check_phone_log_save",
+          "description": "שמירת לוג נסיונות סיסמה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "password_after_check_phone_log_save=yes"
+        }
+      ]
+    },
+
+    "go_to_folder": {
+      "name": "מעבר לתיקיה אחרת",
+      "description": "מעבר פשוט לתיקיה/שלוחה אחרת",
+      "type_value": "go_to_folder",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול מעבר לתיקיה",
+          "type": "fixed",
+          "required": true,
+          "value": "go_to_folder",
+          "example": "type=go_to_folder"
+        },
+        {
+          "key": "go_to_folder",
+          "description": "מעבר לתיקיה (nil, min, max, /, /<path>, 1, tel://, hangup)",
+          "type": "folder",
+          "required": true,
+          "example": "go_to_folder=/1"
+        }
+      ]
+    },
+
+    "go_to_folder_date": {
+      "name": "מעבר לפי תאריך",
+      "description": "מעבר לתיקיה אחרת לפי זמנים עבריים/לועזיים",
+      "type_value": "go_to_folder_date",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול מעבר לפי תאריך",
+          "type": "fixed",
+          "required": true,
+          "value": "go_to_folder_date",
+          "example": "type=go_to_folder_date"
+        },
+        {
+          "key": "go_to_folder_date",
+          "description": "התאריך אליו לעבור (פורמט: YYYY-MM-DD)",
+          "type": "text",
+          "required": true,
+          "example": "go_to_folder_date=2025-10-25"
+        },
+        {
+          "key": "go_to_folder_date_goto",
+          "description": "היעד למעבר בתאריך זה",
+          "type": "folder",
+          "required": true,
+          "example": "go_to_folder_date_goto=/1"
+        },
+        {
+          "key": "go_to_folder_date_error_goto",
+          "description": "היעד אם התאריך לא תואם",
+          "type": "folder",
+          "required": false,
+          "example": "go_to_folder_date_error_goto=/2"
+        }
+      ]
+    },
+
+    "go_to_folder_time": {
+      "name": "מעבר לפי שעות ימים",
+      "description": "מעבר לתיקיות שונות לפי ימות השבוע וטווח שעות",
+      "type_value": "go_to_folder_time",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול מעבר לפי זמן",
+          "type": "fixed",
+          "required": true,
+          "value": "go_to_folder_time",
+          "example": "type=go_to_folder_time"
+        },
+        {
+          "key": "go_to_folder_time_day_time_1",
+          "description": "הגדרת תזמון 1 (פורמט: day.HH:MM-HH:MM)",
+          "type": "text",
+          "required": true,
+          "example": "go_to_folder_time_day_time_1=mon.08:00-16:00"
+        },
+        {
+          "key": "go_to_folder_time_day_time_1_goto",
+          "description": "היעד למעבר בתזמון 1",
+          "type": "folder",
+          "required": true,
+          "example": "go_to_folder_time_day_time_1_goto=/1"
+        },
+        {
+          "key": "go_to_folder_time_error_goto",
+          "description": "היעד אם אין תזמון תואם",
+          "type": "folder",
+          "required": false,
+          "example": "go_to_folder_time_error_goto=/2"
+        }
+      ]
+    },
+
+    "go_to_folder_count": {
+      "name": "מעבר לפי כמות מאזינים",
+      "description": "בדיקת כמות המאזינים הנוכחיים בשלוחה מסויימת והחלטה על מעבר",
+      "type_value": "go_to_folder_count",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול מעבר לפי כמות מאזינים",
+          "type": "fixed",
+          "required": true,
+          "value": "go_to_folder_count",
+          "example": "type=go_to_folder_count"
+        },
+        {
+          "key": "check_folder",
+          "description": "השלוחה לבדיקה (ברירת מחדל: השלוחה הנוכחית)",
+          "type": "folder",
+          "required": false,
+          "example": "check_folder=/1/2"
+        },
+        {
+          "key": "count_max",
+          "description": "כמות מקסימלית לפני מעבר",
+          "type": "number",
+          "required": true,
+          "example": "count_max=5"
+        },
+        {
+          "key": "count_max_goto",
+          "description": "מעבר כאשר הכמות חורגת מהמקסימום",
+          "type": "folder",
+          "required": true,
+          "example": "count_max_goto=/2"
+        }
+      ]
+    },
+
+    "go_to_folder_from_list_all_information": {
+      "name": "מעבר לפי רשימת מידע",
+      "description": "מעבר לתיקיות אחרות לפי רשימה המכילה מידע כללי למשתמשים",
+      "type_value": "go_to_folder_from_list_all_information",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול מעבר לפי רשימת מידע",
+          "type": "fixed",
+          "required": true,
+          "value": "go_to_folder_from_list_all_information",
+          "example": "type=go_to_folder_from_list_all_information"
+        },
+        {
+          "key": "value_number",
+          "description": "מספר ערך להשוואה (11 = משתנה לפי ההקשר)",
+          "type": "number",
+          "required": false,
+          "example": "value_number=11"
+        }
+      ]
+    },
+
+    "go_to_from_tzintuk": {
+      "name": "מעבר מצינתוק",
+      "description": "מעבר לתיקיה אחרת לפי הגדרות צינתוק מתקדמות",
+      "type_value": "go_to_from_tzintuk",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול מעבר מצינתוק",
+          "type": "fixed",
+          "required": true,
+          "value": "go_to_from_tzintuk",
+          "example": "type=go_to_from_tzintuk"
+        }
+      ]
+    },
+
+    "access_filter": {
+      "name": "אקסס פילטר",
+      "description": "מודול פילטר מתקדם עם הגבלות זמן וכמות",
+      "type_value": "access_filter",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול אקסס פילטר",
+          "type": "fixed",
+          "required": true,
+          "value": "access_filter",
+          "example": "type=access_filter"
+        },
+        {
+          "key": "check_access_filter",
+          "description": "הטמעת מודול פילטר בכל מודול אחר",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "check_access_filter=yes"
+        },
+        {
+          "key": "access_filter_yes_goto",
+          "description": "מעבר כאשר מותר לעבור",
+          "type": "folder",
+          "required": false,
+          "example": "access_filter_yes_goto=/2"
+        },
+        {
+          "key": "access_filter_no_goto",
+          "description": "מעבר כאשר אסור לעבור (enter להשאר במקום)",
+          "type": "folder",
+          "required": false,
+          "example": "access_filter_no_goto=enter"
+        },
+        {
+          "key": "access_filter_1_yes_goto",
+          "description": "מעבר לפי הגדרה מספר 1",
+          "type": "folder",
+          "required": false,
+          "example": "access_filter_1_yes_goto=/2"
+        },
+        {
+          "key": "access_filter_2_yes_goto",
+          "description": "מעבר לפי הגדרה מספר 2",
+          "type": "folder",
+          "required": false,
+          "example": "access_filter_2_yes_goto=/3"
+        },
+        {
+          "key": "access_filter_log_save",
+          "description": "שמירת לוג פעילות בתיקיה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "access_filter_log_save=yes"
+        },
+        {
+          "key": "access_filter_log_time_folder",
+          "description": "תיקיה לשמירת נתוני זמן",
+          "type": "folder",
+          "required": false,
+          "example": "access_filter_log_time_folder=/1/1"
+        },
+        {
+          "key": "access_filter_1",
+          "description": "כלל פילטר 1 (פורמט: g/h.שעות.ימים.תאריכים.חודשים.שנים'",
+          "type": "text",
+          "required": false,
+          "example": "access_filter_1=g.09:00-17:00.mon-fri.01-20.jun-jun.2015-2015.30m.9.5d"
+        },
+        {
+          "key": "access_filter_2",
+          "description": "כלל פילטר 2 (פורמט: g/h.שעות.ימים.תאריכים.חודשים.שנים",
+          "type": "text",
+          "required": false,
+          "example": "access_filter_2=g.*.*.*.*.*.*.*.*.1M"
+        },
+        {
+          "key": "access_filter_mode",
+          "description": "מצב פעולה (delete למחיקה)",
+          "type": "enum",
+          "required": false,
+          "values": ["delete"],
+          "example": "access_filter_mode=delete"
+        },
+        {
+          "key": "access_filter_delete_from",
+          "description": "מאיזו תיקיה למחוק הגבלות (בהשחלת /)",
+          "type": "folder",
+          "required": false,
+          "example": "access_filter_delete_from=/"
+        },
+        {
+          "key": "access_filter_delete_all",
+          "description": "מחיקת כל הלוג בשלוחה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "access_filter_delete_all=yes"
+        },
+        {
+          "key": "access_filter_delete_number",
+          "description": "מחיקת מספר הגדרה ספציפי",
+          "type": "number",
+          "required": false,
+          "range": [1, 10],
+          "example": "access_filter_delete_number=1"
+        },
+        {
+          "key": "access_filter_delete_line",
+          "description": "מחיקת שורה לפי התחלה",
+          "type": "text",
+          "required": false,
+          "example": "access_filter_delete_line=OpenToTimeExpires"
+        },
+        {
+          "key": "access_filter_delete_quiet",
+          "description": "מחיקה שקטה ללא הודעות",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "access_filter_delete_quiet=yes"
+        },
+        {
+          "key": "access_filter_delete_error_goto",
+          "description": "לאן לעבור אם לא נמצא לוג למחיקה",
+          "type": "folder",
+          "required": false,
+          "example": "access_filter_delete_error_goto=/"
+        },
+        {
+          "key": "access_filter_delete_goto",
+          "description": "היכן להמשיך לאחר מחיקה מוצלחת",
+          "type": "folder",
+          "required": false,
+          "example": "access_filter_delete_goto=/"
+        }
+      ]
+    },
+
+    "template_filter": {
+      "name": "פילטר רשימת תפוצה",
+      "description": "פילטר רשימות תפוצה המאפשר לחסום/לאשר גישה לפי תבניות",
+      "type_value": "template_filter",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול פילטר תפוצה",
+          "type": "fixed",
+          "required": true,
+          "value": "template_filter",
+          "example": "type=template_filter"
+        },
+        {
+          "key": "template_filter",
+          "description": "מספר התבנית (1, 5 - משתנה לפי הצורך)",
+          "type": "number",
+          "required": false,
+          "range": [1, 100],
+          "example": "template_filter=1"
+        }
+      ]
+    },
+
+    "kibutz_galuyot": {
+      "name": "סובב י—Heart און מקומי - קיבוץ גלויות",
+      "description": "מודול משחק דיגיטלי למפגש דיגיטלי בטלפון עם חוויות שונות",
+      "type_value": "kibutz_galuyot",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול קיבוץ גלויות",
+          "type": "fixed",
+          "required": true,
+          "value": "kibutz_galuyot",
+          "example": "type=kibutz_galuyot"
+        }
+      ]
+    },
+
+    "anonymous_call": {
+      "name": "שיחה אנונימית",
+      "description": "מודול שיחה אנונימית",
+      "type_value": "Anonymous_call",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול שיחה אנונימית",
+          "type": "fixed",
+          "required": true,
+          "value": "Anonymous_call",
+          "example": "type=Anonymous_call"
+        }
+      ]
+    },
+
+    "campaign": {
+      "name": "קמפיין",
+      "description": "מודול קמפיין טלפוני",
+      "type_value": "campaign",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול קמפיין",
+          "type": "fixed",
+          "required": true,
+          "value": "campaign",
+          "example": "type=campaign"
+        },
+        {
+          "key": "list_tzintuk_for_campaign",
+          "description": "רשימת הצינתוקים לקמפיין",
+          "type": "text",
+          "required": false,
+          "example": "list_tzintuk_for_campaign=default"
+        },
+        {
+          "key": "say_member_only",
+          "description": "השמעת הודעת 'מיועד לחברים בלבד'",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "say_member_only=yes"
+        }
+      ]
+    },
+
+    "donation_campaign": {
+      "name": "מודול התרמות",
+      "description": "מודול התרמות עם ניהול תורמים, גיוס תרומות ודו״חות",
+      "type_value": "donation_campaign",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול התרמות",
+          "type": "fixed",
+          "required": true,
+          "value": "donation_campaign",
+          "example": "type=donation_campaign"
+        },
+        {
+          "key": "donation_campaign_total_contributed",
+          "description": "סך התרומות שהצברו בקמפיין זה",
+          "type": "number",
+          "required": false,
+          "example": "donation_campaign_total_contributed=0"
+        },
+        {
+          "key": "donation_campaign_number_of_donors",
+          "description": "כמות התורמים בקמפיין זה",
+          "type": "number",
+          "required": false,
+          "example": "donation_campaign_number_of_donors=0"
+        },
+        {
+          "key": "donation_campaign_end_time",
+          "description": "זמן סיום הקמפיין",
+          "type": "text",
+          "required": false,
+          "example": "donation_campaign_end_time=2019-10-29-12-00-00"
+        },
+        {
+          "key": "donation_campaign_play_fundraiser_results",
+          "description": "השמעת תוצאות מגייס",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "donation_campaign_play_fundraiser_results=yes"
+        },
+        {
+          "key": "donation_campaign_play_status",
+          "description": "השמעת סטטוס הקמפיין",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "donation_campaign_play_status=no"
+        },
+        {
+          "key": "donation_campaign_type",
+          "description": "סוג הקמפיין (metching)",
+          "type": "enum",
+          "required": false,
+          "values": ["metching"],
+          "example": "donation_campaign_type=metching"
+        },
+        {
+          "key": "donation_campaign_target_amount",
+          "description": "סכום היעד לקמפיין",
+          "type": "number",
+          "required": false,
+          "range": [0, 10000000],
+          "example": "donation_campaign_target_amount=2500000"
+        },
+        {
+          "key": "donation_campaign_target_amount_bonus",
+          "description": "סכום בונוס ליעד",
+          "type": "number",
+          "required": false,
+          "range": [0, 10000000],
+          "example": "donation_campaign_target_amount_bonus=3000000"
+        },
+        {
+          "key": "donation_campaign_donate_donation",
+          "description": "הפעלת תרומה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "donation_campaign_donate_donation=yes"
+        },
+        {
+          "key": "donation_campaign_play_status_private",
+          "description": "השמעת סטטוס פרטי",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "donation_campaign_play_status_private=no"
+        },
+        {
+          "key": "donation_campaign_donations_by_groups_only",
+          "description": "תרומות רק לפי קבוצות",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "donation_campaign_donations_by_groups_only=yes"
+        },
+        {
+          "key": "donation_Campaign_donor_groups_end_enterID_no_tfr",
+          "description": "סיום מזהה תורם בלי מעבר",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "donation_Campaign_donor_groups_end_enterID_no_tfr=yes"
+        },
+        {
+          "key": "donation_campaign_play_status_group",
+          "description": "השמעת סטטוס קבוצה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "donation_campaign_play_status_group=no"
+        },
+        {
+          "key": "donation_campaign_record_donor_name",
+          "description": "הקלטת שם התורם",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "donation_campaign_record_donor_name=yes"
+        },
+        {
+          "key": "donation_campaign_record_stt_name",
+          "description": "תומלל שם התורם לטקסט",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "donation_campaign_record_stt_name=yes"
+        },
+        {
+          "key": "donation_campaign_record_tts_name",
+          "description": "קריאת שם התורם ב-TTS",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "donation_campaign_record_tts_name=yes"
+        },
+        {
+          "key": "donation_campaign_record_note",
+          "description": "הקלטת הערה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "donation_campaign_record_note=yes"
+        },
+        {
+          "key": "donation_campaign_record_stt_note",
+          "description": "תומלל הערה לטקסט",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "donation_campaign_record_stt_note=yes"
+        },
+        {
+          "key": "donation_campaign_record_tts_note",
+          "description": "קריאת הערה ב-TTS",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "donation_campaign_record_tts_note=yes"
+        },
+        {
+          "key": "donation_campaign_options",
+          "description": "אפשרויות תשלום (credit_card, cash, receiving_data)",
+          "type": "enum",
+          "required": false,
+          "values": ["credit_card", "cash", "receiving_data"],
+          "example": "donation_campaign_options=credit_card"
+        },
+        {
+          "key": "donation_campaign_receiving_data_credit_card_billing_sum_fundraiser",
+          "description": "חיוב כרטיס האשראי בסכום התרומה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "donation_campaign_receiving_data_credit_card_billing_sum_fundraiser=yes"
+        },
+        {
+          "key": "donation_campaign_set_ok_send_mail",
+          "description": "שליחת מייל אישור תרומה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "donation_campaign_set_ok_send_mail=yes"
+        },
+        {
+          "key": "donation_campaign_end",
+          "description": "מעבר בסיום תרומה מצליחה",
+          "type": "folder",
+          "required": false,
+          "example": "donation_campaign_end=/2"
+        },
+        {
+          "key": "donation_campaign_end",
+          "description": "מעבר בסיום תרומה כושלת",
+          "type": "folder",
+          "required": false,
+          "example": "donation_campaign_end=hangup"
+        },
+        {
+          "key": "donation_Campaign_end_no",
+          "description": "מעבר לסיום כאשר אין תרומה",
+          "type": "folder",
+          "required": false,
+          "example": "donation_Campaign_end_no=/5"
+        }
+      ]
+    },
+
+    "donation_campaign_some_actions": {
+      "name": "פעולות חלקיות בקמפיין התרמות",
+      "description": "מודול לשליטה חלקית בפעולות קמפיין התרמות",
+      "type_value": "donation_campaign_some_actions",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול פעולות חלקיות התרמות",
+          "type": "fixed",
+          "required": true,
+          "value": "donation_campaign_some_actions",
+          "example": "type=donation_campaign_some_actions"
+        },
+        {
+          "key": "location_folder_donation_campaign",
+          "description": "נתיב לתיקיית קמפיין ההתרמות",
+          "type": "folder",
+          "required": false,
+          "example": "location_folder_donation_campaign=/2"
+        },
+        {
+          "key": "donation_campaign_some_actions_type",
+          "description": "סוג הפעולה (playing_status_general, playing_status_private_end_group, playing_status_group, fundraiser_only, define_donate_and_groups)",
+          "type": "enum",
+          "required": false,
+          "values": ["playing_status_general", "playing_status_private_end_group", "playing_status_group", "fundraiser_only", "define_donate_and_groups"],
+          "example": "donation_campaign_some_actions_type=playing_status_general"
+        },
+        {
+          "key": "donation_campaign_play_status_private",
+          "description": "השמעת סטטוס פרטי",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "donation_campaign_play_status_private=no"
+        },
+        {
+          "key": "donation_campaign_refer_to_groups",
+          "description": "הפניה לקבוצות",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "donation_campaign_refer_to_groups=no"
+        },
+        {
+          "key": "donation_campaign_play_status_group",
+          "description": "השמעת סטטוס קבוצה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "donation_campaign_play_status_group=no"
+        },
+        {
+          "key": "donation_campaign_donate_donation",
+          "description": "הפעלת תרומה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "donation_campaign_donate_donation=yes"
+        },
+        {
+          "key": "donation_campaign_record_donor_name",
+          "description": "הקלטת שם התורם",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "donation_campaign_record_donor_name=yes"
+        },
+        {
+          "key": "donation_campaign_record_stt_name",
+          "description": "תומלל שם התורם לטקסט",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "donation_campaign_record_stt_name=yes"
+        },
+        {
+          "key": "donation_campaign_record_tts_name",
+          "description": "קריאת שם התורם ב-TTS",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "donation_campaign_record_tts_name=yes"
+        },
+        {
+          "key": "donation_campaign_record_note",
+          "description": "הקלטת הערה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "donation_campaign_record_note=yes"
+        },
+        {
+          "key": "donation_campaign_record_stt_note",
+          "description": "תומלל הערה לטקסט",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "donation_campaign_record_stt_note=yes"
+        },
+        {
+          "key": "donation_campaign_record_tts_note",
+          "description": "קריאת הערה ב-TTS",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "donation_campaign_record_tts_note=yes"
+        },
+        {
+          "key": "donation_campaign_options",
+          "description": "אפשרויות תשלום (credit_card, cash, receiving_data)",
+          "type": "enum",
+          "required": false,
+          "values": ["credit_card", "cash", "receiving_data"],
+          "example": "donation_campaign_options=credit_card"
+        },
+        {
+          "key": "donation_campaign_end",
+          "description": "מעבר בסיום התרמה",
+          "type": "folder",
+          "required": false,
+          "example": "donation_campaign_end="
+        },
+        {
+          "key": "donation_campaign_some_actions_type",
+          "description": "סוג הפעולה הספציפי (set_goals_for_contributors, set_goals_for_groups, affiliation_contributes_to_groups)",
+          "type": "enum",
+          "required": false,
+          "values": ["set_goals_for_contributors", "set_goals_for_groups", "affiliation_contributes_to_groups"],
+          "example": "donation_campaign_some_actions_type=set_goals_for_contributors"
+        }
+      ]
+    },
+
+    "funding": {
+      "name": "מעקב גיוס תרומות",
+      "description": "מודול מעקב אחר גיוס תרומות ודו״חות",
+      "type_value": "funding",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול גיוס תרומות",
+          "type": "fixed",
+          "required": true,
+          "value": "funding",
+          "example": "type=funding"
+        }
+      ]
+    },
+
+    "credit_card": {
+      "name": "סליקת אשראי",
+      "description": "מודול סליקה מתקדם לכרטיסי אשראי",
+      "type_value": "credit_card",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול סליקה",
+          "type": "fixed",
+          "required": true,
+          "value": "CreditCard",
+          "example": "type=CreditCard"
+        },
+        {
+          "key": "CreditCardPrice",
+          "description": "סכום החיוב (חובה)",
+          "type": "number",
+          "required": true,
+          "example": "CreditCardPrice=500"
+        },
+        {
+          "key": "CreditCardType",
+          "description": "סוג תשלום (regular, installments)",
+          "type": "enum",
+          "required": false,
+          "values": [
+            "regular",
+            "installments"
+          ],
+          "default": "regular",
+          "example": "CreditCardType=installments"
+        },
+        {
+          "key": "CreditCardEndGoto",
+          "description": "מעבר בסיום מוצלח של העסקה",
+          "type": "folder",
+          "required": false,
+          "example": "CreditCardEndGoto=/1"
+        },
+        {
+          "key": "CreditCardErrorGoto",
+          "description": "מעבר במקרה של כישלון עסקה",
+          "type": "folder",
+          "required": false,
+          "example": "CreditCardErrorGoto=/2"
+        }
+      ]
+    },
+
+    "queue": {
+      "name": "תור",
+      "description": "מודול תור",
+      "type_value": "queue",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול תור",
+          "type": "fixed",
+          "required": true,
+          "value": "queue",
+          "example": "type=queue"
+        },
+        {
+          "key": "queue_enter_button",
+          "description": "מקש כניסה לתור (אם לא מוגדר מראש)",
+          "type": "text",
+          "required": false,
+          "example": "queue_enter_button=1"
+        },
+        {
+          "key": "queue_priority",
+          "description": "עדיפות בתור (number/callerid/time)",
+          "type": "enum",
+          "required": false,
+          "values": [
+            "number",
+            "callerid",
+            "time"
+          ],
+          "default": "time",
+          "example": "queue_priority=callerid"
+        },
+        {
+          "key": "queue_wait_time_mode",
+          "description": "מצב המתנה (number, time)",
+          "type": "enum",
+          "required": false,
+          "values": [
+            "number",
+            "time"
+          ],
+          "default": "number",
+          "example": "queue_wait_time_mode=time"
+        }
+      ]
+    },
+
+    "routing": {
+      "name": "ראוטינג",
+      "description": "ראוטינג - הפניית שיחות",
+      "type_value": "routing",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול ראוטינג",
+          "type": "fixed",
+          "required": true,
+          "value": "routing",
+          "example": "type=routing"
+        },
+        {
+          "key": "routing_number",
+          "description": "מספר הטלפון או שלוחה לחיוג (או tel://)",
+          "type": "text",
+          "required": true,
+          "example": "routing_number=0501234567"
+        },
+        {
+          "key": "routing_answer_goto",
+          "description": "מעבר אם המענה ענה לשיחה",
+          "type": "folder",
+          "required": false,
+          "example": "routing_answer_goto=/2"
+        },
+        {
+          "key": "routing_answer_no_answer_goto",
+          "description": "מעבר אם המענה לא ענה (או שהיה תפוס)",
+          "type": "folder",
+          "required": false,
+          "example": "routing_answer_no_answer_goto=/3"
+        }
+      ]
+    },
+
+    "data_receive": {
+      "name": "קבלת נתונים",
+      "description": "מודול קבלת נתונים ממערכות חיצוניות",
+      "type_value": "data_receive",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול קבלת נתונים",
+          "type": "fixed",
+          "required": true,
+          "value": "data_receive",
+          "example": "type=data_receive"
+        },
+        {
+          "key": "list_all_information",
+          "description": "רשימה מקיפה של כל המידע הזמין",
+          "type": "text",
+          "required": false,
+          "example": "list_all_information=*"
+        }
+      ]
+    },
+
+    "menu_advanced": {
+      "name": "תפריט מתקדם",
+      "description": "מודול תפריט מתקדם עם קישורים ואפשרויות מורחבות",
+      "type_value": "menu_new",
+      "settings": [
+        {
+          "key": "say_menu_voice",
+          "description": "השמעת תפריט בקול",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "say_menu_voice=yes"
+        },
+        {
+          "key": "menu_say_conf_bridge",
+          "description": "השמעת חדר ועידה בתפריט",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "menu_say_conf_bridge=yes"
+        },
+        {
+          "key": "menu_say_conf_bridge_1",
+          "description": "מספר שלוחה לחדר ועידה 1",
+          "type": "folder",
+          "required": false,
+          "example": "menu_say_conf_bridge_1=1/9/5"
+        },
+        {
+          "key": "menu_say_conf_bridge_2",
+          "description": "מספר שלוחה לחדר ועידה 2",
+          "type": "folder",
+          "required": false,
+          "example": "menu_say_conf_bridge_2=1/9/7"
+        },
+        {
+          "key": "menu_say_conf_bridge_3",
+          "description": "מספר שלוחה לחדר ועידה 3",
+          "type": "folder",
+          "required": false,
+          "example": "menu_say_conf_bridge_3=1/9/9"
+        },
+        {
+          "key": "menu_say_playdir_time",
+          "description": "השמעת הפעלה לפי זמן בתפריט",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "menu_say_playdir_time=yes"
+        },
+        {
+          "key": "menu_say_playdir_time_1",
+          "description": "מספר שלוחה להפעלה לפי זמן 1",
+          "type": "folder",
+          "required": false,
+          "example": "menu_say_playdir_time_1=1/9/5"
+        },
+        {
+          "key": "menu_say_playdir_time_2",
+          "description": "מספר שלוחה להפעלה לפי זמן 2",
+          "type": "folder",
+          "required": false,
+          "example": "menu_say_playdir_time_2=1/9/7"
+        },
+        {
+          "key": "menu_say_playdir_time_3",
+          "description": "מספר שלוחה להפעלה לפי זמן 3",
+          "type": "folder",
+          "required": false,
+          "example": "menu_say_playdir_time_3=1/9/9"
+        },
+        {
+          "key": "menu_say_playdir_time_wait",
+          "description": "זמן המתנה להפעלה לפי זמן",
+          "type": "number",
+          "required": false,
+          "range": [0, 3600],
+          "example": "menu_say_playdir_time_wait=180"
+        },
+        {
+          "key": "say_tfr_end",
+          "description": "השמעה בסיום התפריט",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "yes",
+          "example": "say_tfr_end=yes"
+        },
+        {
+          "key": "menu_check_playfile_message",
+          "description": "בדיקת הודעות לשלוחה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "menu_check_playfile_message=yes"
+        },
+        {
+          "key": "menu_check_playfile_message_1",
+          "description": "שלוחה 1 לבדיקת הודעות",
+          "type": "folder",
+          "required": false,
+          "example": "menu_check_playfile_message_1=2/2"
+        },
+        {
+          "key": "menu_check_playfile_message_2",
+          "description": "סוג בדיקה (folder)",
+          "type": "enum",
+          "required": false,
+          "values": ["folder"],
+          "example": "menu_check_playfile_message_2=folder"
+        },
+        {
+          "key": "menu_check_playfile_message_3",
+          "description": "סוג בדיקה (personal-id)",
+          "type": "enum",
+          "required": false,
+          "values": ["personal-id"],
+          "example": "menu_check_playfile_message_3=personal-id"
+        },
+        {
+          "key": "menu_check_playfile_message_1_say_new_only",
+          "description": "השמעה רק הודעות חדשות",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "menu_check_playfile_message_1_say_new_only=yes"
+        }
+      ]
+    },
+
+    "dial_telegram": {
+      "name": "חיוג לטלגרם",
+      "description": "מודול חיוג ישיר למשתמש טלגרם",
+      "type_value": "dial_telegram",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול חיוג טלגרם",
+          "type": "fixed",
+          "required": true,
+          "value": "dial_telegram",
+          "example": "type=dial_telegram"
+        }
+      ]
+    },
+
+    "template_add_number": {
+      "name": "הוספה/הסרה מרשימת תפוצה",
+      "description": "מודול להוספה או הסרה של מספרי טלפון מרשימות תפוצה (קמפיינים)",
+      "type_value": "template_add_number",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול הוספה/הסרה מרשימת תפוצה",
+          "type": "fixed",
+          "required": true,
+          "value": "template_add_number",
+          "example": "type=template_add_number"
+        },
+        {
+          "key": "template_to_add",
+          "description": "מספרי רשימות התפוצה להוספה (all, 1,2,3)",
+          "type": "text",
+          "required": false,
+          "example": "template_to_add=2"
+        },
+        {
+          "key": "template_to_remove",
+          "description": "מספרי רשימות התפוצה להסרה (all, 1,2,3)",
+          "type": "text",
+          "required": false,
+          "example": "template_to_remove=5,6,10,2"
+        },
+        {
+          "key": "template_add_ask",
+          "description": "האם לבקש אישור לפני פעולה",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "template_add_ask=yes"
+        },
+        {
+          "key": "remove_and_delete",
+          "description": "מחיקת רשומה לגמרי (לא רק חסימה)",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "remove_and_delete=yes"
+        },
+        {
+          "key": "template_add_ok_no_say_number",
+          "description": "לא להשמיע מספר טלפון בהודעת אישור",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "template_add_ok_no_say_number=yes"
+        },
+        {
+          "key": "end_goto",
+          "description": "שלוחה לעבור לאחר סיום",
+          "type": "folder",
+          "required": false,
+          "example": "end_goto=/8"
+        }
+      ]
+    },
+
+    "invitation_join_campaign": {
+      "name": "הזמנת חבר לקמפיין",
+      "description": "מודול שליחת הזמנה טלפונית לצירוף חבר לרשימת תפוצה",
+      "type_value": "invitation_join_campaign",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול הזמנת חבר",
+          "type": "fixed",
+          "required": true,
+          "value": "invitation_join_campaign",
+          "example": "type=invitation_join_campaign"
+        },
+        {
+          "key": "invitation_join_campaign_template",
+          "description": "מספר רשימת התפוצה לצירוף",
+          "type": "number",
+          "required": true,
+          "example": "invitation_join_campaign_template=1"
+        },
+        {
+          "key": "invitation_join_campaign_say_did_number",
+          "description": "מספר מערכת להשמעה בשיחה",
+          "type": "text",
+          "required": false,
+          "example": "invitation_join_campaign_say_did_number=077XXX"
+        },
+        {
+          "key": "invitation_join_campaign_success_goto",
+          "description": "שלוחה לאחר הצלחה",
+          "type": "folder",
+          "required": false,
+          "example": "invitation_join_campaign_success_goto=/8"
+        },
+        {
+          "key": "invitation_join_campaign_missing_parameters_goto",
+          "description": "שלוחה אם חסרות הגדרות",
+          "type": "folder",
+          "required": false,
+          "example": "invitation_join_campaign_missing_parameters_goto=/X"
+        }
+      ]
+    },
+
+    "recording_and_entering_data_advanced": {
+      "name": "קבלת נתונים מתקדמת",
+      "description": "מודול מתקדם להכנסת נתונים עם אפשרויות רבות לפעולות נוספות",
+      "type_value": "recording_and_entering_data",
+      "settings": [
+        {
+          "key": "type",
+          "description": "הגדרת מודול קבלת נתונים",
+          "type": "fixed",
+          "required": true,
+          "value": "recording_and_entering_data",
+          "example": "type=recording_and_entering_data"
+        },
+        {
+          "key": "add_to_list_all_information",
+          "description": "הוספה לקובץ ListAllInformation",
+          "type": "enum",
+          "required": false,
+          "values": ["yes"],
+          "example": "add_to_list_all_information=yes"
+        },
+        {
+          "key": "add_approval_1_to_list_all_information",
+          "description": "הוספת יאושר אוטומטי לListAllInformation",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "add_approval_1_to_list_all_information=yes"
+        },
+        {
+          "key": "set_ok_send_mail",
+          "description": "שליחת מייל נרישום מוצלח",
+          "type": "enum",
+          "required": false,
+          "values": ["yes", "no"],
+          "default": "no",
+          "example": "set_ok_send_mail=yes"
+        },
+        {
+          "key": "billing_sum",
+          "description": "סכום לתשלום",
+          "type": "number",
+          "required": false,
+          "example": "billing_sum=100"
+        },
+        {
+          "key": "booking_max",
+          "description": "מספר נרשמים מקסימלי",
+          "type": "number",
+          "required": false,
+          "example": "booking_max=100"
+        },
+        {
+          "key": "record_ok",
+          "description": "דילוג על השמעת הקלטות בשמיעה חוזרת",
+          "type": "enum",
+          "required": false,
+          "values": ["#"],
+          "example": "record_ok=#"
+        },
+        {
+          "key": "XXX-option",
+          "description": "הגדרות ספציפיות לקובץ (למשל 050-option=10-9-7-TeudatZehut----Next)",
+          "type": "text",
+          "required": false,
+          "example": "050-option=10-9-7-Digits----Next-CheckNoDoubleFromEnter"
+        },
+        {
+          "key": "recording_and_entering_data_end_goto",
+          "description": "שלוחה למעבר אחרי סיום מוצלח",
+          "type": "folder",
+          "required": false,
+          "example": "recording_and_entering_data_end_goto=/8"
+        }
+      ]
+    }
+  },
+
+  "folder_1_settings": {
+    "description": "הגדרות מתיקיית '1' - מודולים ויישומים כלליים",
+    "total_files": 61,
+    "subfolders": [
+      "100_כללי",
+      "101_הגדרות שנוספו לאחרונה",
+      "API",
+      "אפליקציות שונות",
+      "הוספת והסרת ערך id",
+      "menu_definitions"
+    ],
+    "api_module": {
+      "description": "מודול API להטמעה בכל מודול",
+      "module_type": "call_api_verification",
+      "integration_type": "per_module",
+      "settings": {
+        "type": {
+          "value": "call_api_verification",
+          "required": true,
+          "description": "סוג השלוחה למודול בדיקת הרשאת כניסה מול API"
+        },
+        "call_api_link": {
+          "value": "http://....",
+          "required": true,
+          "description": "כתובת לבדיקה"
+        },
+        "call_api_type": {
+          "value": "POST",
+          "required": false,
+          "default": "GET",
+          "description": "סוג הפניה (POST או GET)"
+        },
+        "call_api_answer_OK": {
+          "value": "/1",
+          "required": false,
+          "description": "מעבר כאשר מורשה כניסה"
+        },
+        "call_api_answer_ERROR": {
+          "value": "/7",
+          "required": false,
+          "description": "מעבר כאשר לא מורשה כניסה"
+        },
+        "GOTO": {
+          "value": "XX",
+          "required": false,
+          "description": "מעבר דינמי לפי תשובת ה-API (לא ברירת המחדל)"
+        },
+        "check_api": {
+          "value": "yes",
+          "required": false,
+          "description": "הטמעת בדיקת API בכל כניסה לשלוחה"
+        },
+        "api_link": {
+          "value": "כתובת לבדיקה",
+          "required": true,
+          "description": "כתובת לבדיקה כהטמעה בכל מודול"
+        },
+        "check_api_every_entry": {
+          "value": "yes",
+          "required": false,
+          "description": "בדיקה בכל כניסה או רק בניסיון הראשון"
+        },
+        "api_goto": {
+          "value": "/1",
+          "required": false,
+          "description": "מעבר כאשר לא מורשה כניסה (NO/Out)"
+        },
+        "api_error_goto": {
+          "value": "/2",
+          "required": false,
+          "description": "מעבר במידה ולא מתקבלת תשובה"
+        }
+      },
+      "api_responses": {
+        "OK": "ממשיך מיד לשלוחה בצורה רגילה",
+        "NO": "יוצא מהשלוחה עם הודעה M1102",
+        "Out": "יוצא מהשלוחה ללא הודעה",
+        "other": "יוצא מהשלוחה ללא הודעה"
+      }
     }
   }
 }

@@ -516,28 +516,22 @@
     bar.innerHTML = `
       <div class="ym-helper-wrap">
         <div class="ym-bar-row">
-          <select class="ym-select" id="ymCategorySelect" title="סינון לפי קטגוריה">
-            <option value="__all__">כל הקטגוריות</option>
-          </select>
-          <div class="ym-input-wrap">
-            <input class="ym-input" id="ymSearchInput" type="text" placeholder="חיפוש הגדרה... (Alt+K)"/>
+          <div class="ym-input-wrap" style="flex:1;">
+            <input 
+              class="ym-input ym-module-search" 
+              id="ymModuleSearch" 
+              type="text" 
+              list="ymModulesList"
+              placeholder="🔍 חפש או בחר מודול... (Alt+K)"
+            />
+            <datalist id="ymModulesList"></datalist>
           </div>
         </div>
-        <div class="ym-bar-row">
-          <button class="ym-btn" id="ymRefreshBtn" title="טעינת נתונים מקובץ ה-GitHub">עדכן מגיטהב</button>
-          <button class="ym-btn ghost" id="ymExportBtn" title="ייצוא הרשימה הנוכחית לקובץ JSON">ייצא לקובץ</button>
-          <label class="ym-btn ghost" for="ymImportInput" title="ייבוא מקובץ JSON מהמחשב">ייבא מקובץ</label>
-          <input type="file" id="ymImportInput" class="ym-file-input" accept=".json"/>
-          <span class="ym-last-update" id="ymLastUpdate">עדכון אחרון: ${LAST_UPDATE}</span>
-        </div>
-        <div class="ym-results" id="ymResults"></div>
-        <div class="ym-selected-box">
-          <label class="ym-title">תצוגת EXT שנבחרו</label>
-          <textarea id="ymSelectedText" class="ym-selected-textarea" placeholder="השורות שתבחר יופיעו כאן"></textarea>
-          <div class="ym-bar-row">
-            <button class="ym-btn" id="ymCopySelected" title="העתקת כל השורות הנבחרות ללוח">העתק הכל</button>
-            <button class="ym-btn" id="ymPasteSelected" title="הדבקת כל השורות הנבחרות ל-EXT.INI">הדבק הכל ל-EXT.INI</button>
-            <button class="ym-btn ghost" id="ymClearSelected" title="איפוס בחירה">נקה בחירה</button>
+        <div class="ym-results" id="ymResults">
+          <div class="ym-welcome">
+            <div class="ym-welcome-icon">🎯</div>
+            <div class="ym-welcome-title">ברוכים הבאים לדפדפן המודולים</div>
+            <div class="ym-welcome-text">בחר מודול מהרשימה למעלה כדי לראות את כל ההגדרות שלו</div>
           </div>
         </div>
       </div>
@@ -547,110 +541,123 @@
     container.innerHTML = '';
     container.appendChild(bar);
 
-    const $input = bar.querySelector('#ymSearchInput');
-    const $results = bar.querySelector('#ymResults');
-    const $cat = bar.querySelector('#ymCategorySelect');
-    const $selected = bar.querySelector('#ymSelectedText');
-
-    function applySelectedText() { $selected.value = aggregateSelectedText(); }
-    function itemKey(it){ return it.title + '|' + it.code; }
-    window.renderCategories = function(list){
-      const cats = deriveCategories(list);
-      if (!$cat) return;
-      $cat.innerHTML = '<option value="__all__">כל הקטגוריות</option>' + cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+    // אתחול מודולים
+    const $moduleSearch = bar.querySelector('#ymModuleSearch');
+    const $modulesList = bar.querySelector('#ymModulesList');
+    const $resultsDiv = bar.querySelector('#ymResults');
+    
+    // המתנה ל-IDE schema (אם יש)
+    function initModules() {
+      // נבדוק אם יש IDE schema זמין
+      if (window.YM_IDE_SCHEMA) {
+        const modules = Object.keys(window.YM_IDE_SCHEMA.modules || {});
+        $modulesList.innerHTML = modules.map(m => `<option value="${m}">${m}</option>`).join('');
+        console.log('📦 Loaded', modules.length, 'modules for browser:', modules);
+      } else {
+        console.warn('⚠️ YM_IDE_SCHEMA not available yet');
+      }
     }
-
-    window.renderResults = function (list) {
-      if (!$results) return;
-      if (!list.length) {
-        $results.innerHTML = `<div class="ym-result"><div class="ym-title">לא נמצאו תוצאות</div></div>`;
-        $results.classList.remove('hidden');
+    
+    // נטען כברירת מחדל מודולים בסיסיים
+    console.log('🔍 Initializing module browser...');
+    initModules();
+    
+    // האזנה לאירוע שה-IDE נטען
+    window.addEventListener('ym-ide-ready', (e) => {
+      console.log('🎯 YM IDE ready event received, updating module list');
+      initModules();
+    });
+    
+    // טיפול בבחירת מודול
+    $moduleSearch.addEventListener('input', () => {
+      const selectedModule = $moduleSearch.value.trim();
+      if (!selectedModule) {
+        $resultsDiv.innerHTML = `
+          <div class="ym-welcome">
+            <div class="ym-welcome-icon">🎯</div>
+            <div class="ym-welcome-title">ברוכים הבאים לדפדפן המודולים</div>
+            <div class="ym-welcome-text">בחר מודול מהרשימה למעלה כדי לראות את כל ההגדרות שלו</div>
+          </div>
+        `;
         return;
       }
-      $results.innerHTML = '';
-      // קיבוץ לפי קטגוריות + כותרת לכל קטגוריה
-      const byCat = new Map();
-      list.forEach(it => {
-        const c = (it.category || it.cat || 'כללי');
-        if (!byCat.has(c)) byCat.set(c, []);
-        byCat.get(c).push(it);
-      });
-      for (const [cat, arr] of byCat.entries()) {
-        const header = document.createElement('div');
-        header.className = 'ym-category';
-        header.textContent = cat;
-        $results.appendChild(header);
-        arr.forEach((it) => {
-          const r = document.createElement('div');
-          r.className = 'ym-result';
-          const desc = it.desc || it.help || '';
-          r.innerHTML = `
-            <div class="ym-info">
-              <div class="ym-title" title="${desc ? desc.replace(/\"/g,'\\\"') : 'הגדרה'}">${it.title}</div>
-              <div class="ym-code" title="${desc ? desc.replace(/\"/g,'\\\"') : ''}">${it.code}</div>
-              ${desc ? `<div class=\"ym-hint\">${desc}</div>` : ''}
+      
+      // הצגת הגדרות המודול
+      if (window.YM_IDE_SCHEMA && window.YM_IDE_SCHEMA.modules && window.YM_IDE_SCHEMA.modules[selectedModule]) {
+        const moduleSettings = window.YM_IDE_SCHEMA.modules[selectedModule].settings || [];
+        let html = `
+          <div class="ym-module-header">
+            <h3>📦 מודול: ${selectedModule}</h3>
+            <div class="ym-module-desc">${moduleSettings.length} הגדרות זמינות</div>
+          </div>
+        `;
+        
+        moduleSettings.forEach(setting => {
+          html += `
+            <div class="ym-result" data-key="${setting.key}" data-module="${selectedModule}">
+              <div class="ym-result-header">
+                <code class="ym-result-key">${setting.key}</code>
+                ${setting.required ? '<span class="ym-badge ym-badge-required">נדרש</span>' : ''}
+              </div>
+              <div class="ym-result-desc">${setting.description || ''}</div>
+              ${setting.example ? `<div class="ym-result-example">דוגמה: <code>${setting.example}</code></div>` : ''}
+              ${setting.values ? `<div class="ym-result-values">ערכים: ${setting.values.join(', ')}</div>` : ''}
             </div>
           `;
-          const k = itemKey(it);
-          if (SELECTED.has(k)) {
-            r.classList.add('selected');
-          }
-          r.addEventListener('click', () => {
-            if (SELECTED.has(k)) {
-              SELECTED.delete(k);
-              r.classList.remove('selected');
-            } else {
-              SELECTED.add(k);
-              r.classList.add('selected');
+        });
+        
+        $resultsDiv.innerHTML = html;
+        
+        // טיפול בלחיצה על הגדרה - הוספה ישירה לשדה הקוד
+        $resultsDiv.querySelectorAll('.ym-result').forEach(el => {
+          el.addEventListener('click', () => {
+            const key = el.dataset.key;
+            const setting = window.YM_IDE_SCHEMA.modules[selectedModule].settings.find(s => s.key === key);
+            const example = setting?.example || `${key}=`;
+            
+            // מצא את שדה הקוד (EXT.INI)
+            const ta = findExtIniTextarea();
+            if (!ta) {
+              showToast('לא נמצאה תיבת טקסט של EXT.INI');
+              return;
             }
-            applySelectedText();
+            
+            // בדוק אם צריך להוסיף type= לפני (למודולים שאינם general)
+            let textToAdd = example;
+            if (selectedModule !== 'general' && key !== 'type') {
+              // בדוק אם כבר יש type= במודול הנוכחי
+              const lines = ta.value.split('\n');
+              const lastLines = lines.slice(-10); // 10 שורות אחרונות
+              const hasTypeInRecent = lastLines.some(line => line.trim().startsWith('type='));
+              
+              // אם אין type= קרוב, הוסף אותו
+              if (!hasTypeInRecent) {
+                const moduleType = window.YM_IDE_SCHEMA.modules[selectedModule].type_value || selectedModule;
+                textToAdd = `type=${moduleType}\n${example}`;
+              }
+            }
+            
+            // הוסף את ההגדרה לשדה
+            const currentValue = ta.value;
+            const needsNewline = currentValue && !currentValue.endsWith('\n');
+            ta.value = currentValue + (needsNewline ? '\n' : '') + textToAdd + '\n';
+            
+            // עדכן את המערכת
+            ta.dispatchEvent(new Event('input', {bubbles: true}));
+            ta.dispatchEvent(new Event('change', {bubbles: true}));
+            ta.focus();
+            ta.scrollTop = ta.scrollHeight;
+            
+            // הודעה למשתמש
+            const addedLines = textToAdd.includes('\n') ? 'הגדרות נוספו' : `נוסף: ${example}`;
+            showToast(`✅ ${addedLines}`);
+            
+            // סימון ויזואלי
+            el.classList.add('selected');
+            setTimeout(() => el.classList.remove('selected'), 300);
           });
-          $results.appendChild(r);
         });
       }
-      // נשאיר תמיד גלוי
-    };
-
-    // הצגת תוצאות קבועה; אין הסתרה ב-blur
-    const baseFocus = () => {
-      const base = $cat.value==='__all__' ? ITEMS : ITEMS.filter(it => (it.category||it.cat||'כללי')===$cat.value);
-      renderResults(filterItems(base, $input.value));
-    };
-    $input.addEventListener('focus', baseFocus);
-    $input.addEventListener('input', () => {
-      const base = $cat.value==='__all__' ? ITEMS : ITEMS.filter(it => (it.category||it.cat||'כללי')===$cat.value);
-      renderResults(filterItems(base, $input.value));
-    });
-
-    bar.querySelector('#ymRefreshBtn').addEventListener('click', () => loadJSONFromGitHub(GITHUB_RAW_URL));
-    bar.querySelector('#ymExportBtn').addEventListener('click', exportToFile);
-    bar.querySelector('#ymImportInput').addEventListener('change', importFromFile);
-    bar.querySelector('#ymCopySelected').addEventListener('click', ()=>{ copyToClipboard(aggregateSelectedText()); });
-    bar.querySelector('#ymPasteSelected').addEventListener('click', ()=>{
-      const ta = findExtIniTextarea(); if(!ta){ showToast('לא נמצאה תיבת טקסט של EXT.INI'); return; }
-      const txt = aggregateSelectedText();
-      if (!txt) { showToast('לא נבחרו הגדרות'); return; }
-      ta.value += (ta.value.endsWith('\n')?'':'\n') + txt + '\n';
-      ta.dispatchEvent(new Event('input',{bubbles:true})); ta.dispatchEvent(new Event('change',{bubbles:true})); ta.focus(); ta.scrollTop = ta.scrollHeight;
-      showToast('נוסף ל-EXT.INI');
-    });
-    bar.querySelector('#ymClearSelected').addEventListener('click', ()=>{ 
-      SELECTED.clear(); 
-      applySelectedText(); 
-      bar.querySelectorAll('.ym-result.selected').forEach(el => el.classList.remove('selected')); 
-    });
-
-    // הכנת קטגוריות ותצוגה ראשונית
-    renderCategories(ITEMS);
-    const base = ITEMS;
-    renderResults(filterItems(base, ''));
-    applySelectedText();
-    updateLastUpdateDisplay();
-    // טעינה אוטומטית ראשונית מה-RAW כדי שהרשימה תתעדכן בלי לחיצה
-    loadJSONFromGitHub(GITHUB_RAW_URL).catch(()=>{});
-    $cat.addEventListener('change', ()=>{
-      const base2 = $cat.value==='__all__' ? ITEMS : ITEMS.filter(it => (it.category||it.cat||'כללי')===$cat.value);
-      renderResults(filterItems(base2, $input.value));
     });
   }
 
@@ -658,7 +665,7 @@
 
   window.addEventListener('keydown', (e) => {
     if (e.altKey && e.key.toLowerCase() === HOTKEY.key) {
-      const inp = document.querySelector('#ymSearchInput');
+      const inp = document.querySelector('#ymModuleSearch') || document.querySelector('#ymSearchInput');
       if (inp) { inp.focus(); inp.select(); e.preventDefault(); }
     }
   });
@@ -708,17 +715,23 @@
     }
   };
 
+  // טעינה מיידית של הסכימה המוטמעת (זמין מיד!)
+  SCHEMA = EMBEDDED_SCHEMA;
+  window.YM_IDE_SCHEMA = SCHEMA;
+  console.log('🎯 YM IDE Schema pre-loaded (embedded)');
+
   // טעינת הסכימה - תחילה מוטמעת, אז מ-GitHub
   async function loadSchema() {
     try {
       const response = await fetch(SCHEMA_URL);
       SCHEMA = await response.json();
-      console.log('✅ YM IDE Schema loaded from GitHub');
+      window.YM_IDE_SCHEMA = SCHEMA; // חשיפה לשימוש במודול החיפוש
+      console.log('✅ YM IDE Schema loaded from GitHub (updated)');
+      // עדכון רשימת מודולים
+      window.dispatchEvent(new CustomEvent('ym-ide-ready', { detail: { schema: SCHEMA } }));
       return true;
     } catch (error) {
-      console.warn('⚠️  Failed to load from GitHub, using embedded schema');
-      SCHEMA = EMBEDDED_SCHEMA;
-      console.log('✅ YM IDE Schema loaded (embedded)');
+      console.warn('⚠️  Failed to load from GitHub, keeping embedded schema');
       return true;
     }
   }
@@ -957,6 +970,9 @@
         getSchema: () => SCHEMA
       };
       console.log('✅ YM IDE Module ready! Schema has', Object.keys(SCHEMA.modules || {}).length, 'modules');
+      
+      // יידוע למודול החיפוש שה-schema נטען
+      window.dispatchEvent(new CustomEvent('ym-ide-ready', { detail: { schema: SCHEMA } }));
     }
   }
 
@@ -971,8 +987,6 @@
 
   let textarea = null;
   let overlay = null;
-  let toggleButton = null;
-  let isIDEActive = false;
 
   function waitForIDE() {
     return new Promise((resolve) => {
@@ -1039,45 +1053,11 @@
       overlay.scrollLeft = textarea.scrollLeft;
     });
 
-    // הסתר את הכפתור הצף אם IDE פעיל כדי למנוע התנגשות
-    if (toggleButton) {
-      toggleButton.style.display = 'none';
-    }
-
     console.log('✅ Wrapper created');
-    createToggleButton();
-    return true;
-  }
-
-  function createToggleButton() {
-    const extEditor = document.querySelector('#extini_editor');
-    if (!extEditor || document.querySelector('.ym-ide-toggle')) return;
-
-    toggleButton = document.createElement('div');
-    toggleButton.className = 'ym-ide-toggle';
-    toggleButton.innerHTML = '<span class="ym-ide-toggle-icon">🤖</span><span class="ym-ide-toggle-text">IDE</span>';
-    toggleButton.title = 'הפעל/כבה מצב IDE';
-    toggleButton.addEventListener('click', toggleIDE);
     
-    const wrapper = textarea?.parentElement;
-    if (wrapper?.classList.contains('ym-ide-wrapper')) {
-      extEditor.insertBefore(toggleButton, wrapper);
-    } else {
-      extEditor.appendChild(toggleButton);
-    }
-
-    console.log('✅ Toggle button created');
-  }
-
-  function toggleIDE() {
-    isIDEActive = !isIDEActive;
-    toggleButton?.classList.toggle('active', isIDEActive);
-
-    if (isIDEActive) {
-      startIDE();
-    } else {
-      stopIDE();
-    }
+    // 🚀 הפעל את ה-IDE מיד ואוטומטית!
+    startIDE();
+    return true;
   }
 
   function startIDE() {
@@ -1086,8 +1066,12 @@
     textarea.addEventListener('input', analyzeContent);
     textarea.addEventListener('input', handleInput);
     textarea.addEventListener('keydown', handleKeyDown);
-    analyzeContent();
-    console.log('✅ IDE activated');
+    
+    // ניתוח ראשוני - עם עיכוב קטן כדי שה-DOM יהיה מוכן
+    setTimeout(() => {
+      analyzeContent();
+      console.log('✅ IDE activated - initial analysis complete');
+    }, 100);
   }
 
   function handleInput(e) {
@@ -1285,13 +1269,16 @@
       const newLine = text;
       textarea.value = textBefore.substring(0, lineStart) + newLine + textAfter;
       
-      // שים את הסמן אחרי ה-'='
-      const equalPos = lineStart + newLine.indexOf('=') + 1;
-      textarea.selectionStart = textarea.selectionEnd = equalPos;
+      // 🎯 הסמן קופץ לסוף השורה שהוכנסה
+      const newCursorPos = lineStart + newLine.length;
+      textarea.selectionStart = textarea.selectionEnd = newCursorPos;
     } else {
       // אחרת, החלף את כל השורה
       textarea.value = textBefore.substring(0, lineStart) + text + '\n' + textAfter;
-      textarea.selectionStart = textarea.selectionEnd = lineStart + text.length + 1;
+      
+      // 🎯 הסמן קופץ לסוף השורה שהוכנסה
+      const newCursorPos = lineStart + text.length;
+      textarea.selectionStart = textarea.selectionEnd = newCursorPos;
     }
     
     // עדכן ניתוח
@@ -1337,6 +1324,13 @@
     if (!textarea || !overlay || !window.YMHelper?.IDE) return;
 
     const content = textarea.value;
+    
+    // אם אין תוכן, הצג את ה-overlay ריק
+    if (!content) {
+      overlay.innerHTML = '';
+      return;
+    }
+    
     const parsed = window.YMHelper.IDE.parseExtIni(content);
     const validated = window.YMHelper.IDE.validateSettings(parsed);
 
@@ -1347,7 +1341,7 @@
   }
 
   function updateOverlay(validated) {
-    if (!overlay) return;
+    if (!overlay || !textarea) return;
 
     const lines = textarea.value.split('\n');
     let html = '';
@@ -1365,14 +1359,15 @@
         html += `<span class="ym-ide-error" title="${errorMessages}" style="position: relative; display: inline-block;">${escapedLine}</span>`;
         console.log(`🛑 Error on line ${lineNumber}: ${line} - ${errorMessages}`);
       } else {
-        // הוסף טקסט רגיל
-        html += line.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
+        // הוסף טקסט רגיל - אם השורה ריקה, שמור רווח
+        const escapedLine = line.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
+        html += escapedLine || ' ';
       }
 
       if (i < lines.length - 1) html += '\n';
     }
 
-    overlay.innerHTML = html;
+    overlay.innerHTML = html || ' '; // וודא שיש תמיד משהו
 
     // סנכרן גלילה ומיקום
     overlay.scrollTop = textarea.scrollTop;
