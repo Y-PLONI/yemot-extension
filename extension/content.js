@@ -22,13 +22,7 @@
     return e;
   }
 
-  // הכפתור הצף
-  const fab = el('button', { class: 'ym-fab', title: 'פתח/סגור את חלונית ההגדרות' }, [
-    el('span', { html: '&#9881;' }) // gear emoji-like
-  ]);
-  document.body.appendChild(fab);
-
-  // החלונית
+  // החלונית (ללא כפתור FAB - הכפתור נמצא ליד textarea)
   const panel = el('aside', { class: 'ym-side-panel', dir: 'rtl' });
 
   // עזר לבחירת אלמנטים מתוך החלונית בלבד
@@ -77,10 +71,8 @@
     }
   }
 
-  fab.addEventListener('click', () => {
-    panel.classList.toggle('open');
-    syncBodyOpenClass();
-  });
+  // FAB button removed - panel opens from button near textarea
+  
   header.querySelector('.ym-close').addEventListener('click', () => {
     panel.classList.remove('open');
     syncBodyOpenClass();
@@ -516,22 +508,23 @@
     bar.innerHTML = `
       <div class="ym-helper-wrap">
         <div class="ym-bar-row">
-          <div class="ym-input-wrap" style="flex:1;">
+          <div class="ym-combo-wrapper" style="flex:1; position:relative;">
             <input 
-              class="ym-input ym-module-search" 
-              id="ymModuleSearch" 
               type="text" 
-              list="ymModulesList"
-              placeholder="🔍 חפש או בחר מודול... (Alt+K)"
+              class="ym-input ym-combo-input" 
+              id="ymModuleInput" 
+              placeholder="🔍 חפש מודול... (Alt+K)" 
+              autocomplete="off"
             />
-            <datalist id="ymModulesList"></datalist>
+            <button class="ym-combo-btn" id="ymComboBtn" type="button" title="הצג את כל המודולים">▼</button>
+            <div class="ym-combo-dropdown" id="ymComboDropdown"></div>
           </div>
         </div>
         <div class="ym-results" id="ymResults">
           <div class="ym-welcome">
             <div class="ym-welcome-icon">🎯</div>
             <div class="ym-welcome-title">ברוכים הבאים לדפדפן המודולים</div>
-            <div class="ym-welcome-text">בחר מודול מהרשימה למעלה כדי לראות את כל ההגדרות שלו</div>
+            <div class="ym-welcome-text">חפש או בחר מודול מהרשימה למעלה</div>
           </div>
         </div>
       </div>
@@ -541,24 +534,100 @@
     container.innerHTML = '';
     container.appendChild(bar);
 
-    // אתחול מודולים
-    const $moduleSearch = bar.querySelector('#ymModuleSearch');
-    const $modulesList = bar.querySelector('#ymModulesList');
+    // אתחול combo box
+    const $input = bar.querySelector('#ymModuleInput');
+    const $comboBtn = bar.querySelector('#ymComboBtn');
+    const $dropdown = bar.querySelector('#ymComboDropdown');
     const $resultsDiv = bar.querySelector('#ymResults');
+    
+    let allModules = [];
+    let isDropdownOpen = false;
     
     // המתנה ל-IDE schema (אם יש)
     function initModules() {
-      // נבדוק אם יש IDE schema זמין
       if (window.YM_IDE_SCHEMA) {
-        const modules = Object.keys(window.YM_IDE_SCHEMA.modules || {});
-        $modulesList.innerHTML = modules.map(m => `<option value="${m}">${m}</option>`).join('');
-        console.log('📦 Loaded', modules.length, 'modules for browser:', modules);
+        allModules = Object.keys(window.YM_IDE_SCHEMA.modules || {});
+        console.log('📦 Loaded', allModules.length, 'modules for browser:', allModules);
       } else {
         console.warn('⚠️ YM_IDE_SCHEMA not available yet');
       }
     }
     
-    // נטען כברירת מחדל מודולים בסיסיים
+    // עדכון dropdown
+    function updateDropdown(filter = '') {
+      const filtered = filter 
+        ? allModules.filter(m => m.toLowerCase().includes(filter.toLowerCase()))
+        : allModules;
+      
+      if (filtered.length === 0) {
+        $dropdown.innerHTML = '<div class="ym-combo-item ym-combo-empty">לא נמצאו מודולים</div>';
+      } else {
+        $dropdown.innerHTML = filtered.map(m => 
+          `<div class="ym-combo-item" data-value="${m}">${m}</div>`
+        ).join('');
+        
+        // הוסף event listeners
+        $dropdown.querySelectorAll('.ym-combo-item:not(.ym-combo-empty)').forEach(item => {
+          item.addEventListener('click', () => {
+            selectModule(item.dataset.value);
+          });
+        });
+      }
+    }
+    
+    // פתיחה/סגירה של dropdown
+    function toggleDropdown() {
+      isDropdownOpen = !isDropdownOpen;
+      $dropdown.classList.toggle('open', isDropdownOpen);
+      if (isDropdownOpen) {
+        updateDropdown($input.value);
+        $comboBtn.textContent = '▲';
+      } else {
+        $comboBtn.textContent = '▼';
+      }
+    }
+    
+    // בחירת מודול
+    function selectModule(moduleName) {
+      $input.value = moduleName;
+      isDropdownOpen = false;
+      $dropdown.classList.remove('open');
+      $comboBtn.textContent = '▼';
+      showModuleSettings(moduleName);
+    }
+    
+    // כפתור dropdown
+    $comboBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleDropdown();
+    });
+    
+    // חיפוש תוך כדי הקלדה
+    $input.addEventListener('input', () => {
+      const value = $input.value.trim();
+      if (value && !isDropdownOpen) {
+        isDropdownOpen = true;
+        $dropdown.classList.add('open');
+        $comboBtn.textContent = '▲';
+      }
+      updateDropdown(value);
+      
+      // אם יש התאמה מדויקת, הצג אותה
+      if (allModules.includes(value)) {
+        showModuleSettings(value);
+      }
+    });
+    
+    // סגירה בלחיצה מחוץ
+    document.addEventListener('click', (e) => {
+      if (!bar.contains(e.target)) {
+        isDropdownOpen = false;
+        $dropdown.classList.remove('open');
+        $comboBtn.textContent = '▼';
+      }
+    });
+    
+    // נטען כברירת מחדל מודולים
     console.log('🔍 Initializing module browser...');
     initModules();
     
@@ -568,9 +637,8 @@
       initModules();
     });
     
-    // טיפול בבחירת מודול
-    $moduleSearch.addEventListener('input', () => {
-      const selectedModule = $moduleSearch.value.trim();
+    // הצגת הגדרות מודול
+    function showModuleSettings(selectedModule) {
       if (!selectedModule) {
         $resultsDiv.innerHTML = `
           <div class="ym-welcome">
@@ -658,15 +726,19 @@
           });
         });
       }
-    });
+    }
   }
 
   buildUI();
 
   window.addEventListener('keydown', (e) => {
     if (e.altKey && e.key.toLowerCase() === HOTKEY.key) {
-      const inp = document.querySelector('#ymModuleSearch') || document.querySelector('#ymSearchInput');
-      if (inp) { inp.focus(); inp.select(); e.preventDefault(); }
+      const input = document.querySelector('#ymModuleInput');
+      if (input) { 
+        input.focus(); 
+        input.select();
+        e.preventDefault(); 
+      }
     }
   });
 })();
@@ -675,64 +747,34 @@
 (function YMIDEModule() {
   'use strict';
 
-  const SCHEMA_URL = 'https://raw.githubusercontent.com/Y-PLONI/yemot-extension/main/ym_settings_schema.json';
+  const SCHEMA_URL = 'https://raw.githubusercontent.com/Y-PLONI/yemot-extension/refs/heads/main/extension/ym_settings_schema.json';
   let SCHEMA = null;
   let VALIDATION_ENABLED = false;
 
-  // סכימה מוטמעת (כברירת מחדל עד שנעלה ל-GitHub)
-  const EMBEDDED_SCHEMA = {
-    "version": "1.0.0",
-    "lastUpdate": "2025-10-15",
-    "modules": {
-      "general": {
-        "name": "הגדרות כלליות",
-        "description": "הגדרות שאינן תלויות במודול ספציפי",
-        "settings": [
-          {"key": "title", "description": "כותרת השלוחה", "type": "text", "required": false, "example": "title=ברוכים הבאים"},
-          {"key": "password", "description": "סיסמה לשלוחה", "type": "text", "required": false, "example": "password=1234"},
-          {"key": "language", "description": "שפת המערכת", "type": "enum", "required": false, "values": ["he", "en", "ar"], "default": "he", "example": "language=he"}
-        ]
-      },
-      "menu": {
-        "name": "תפריט",
-        "description": "מודול תפריט בסיסי",
-        "type_value": "menu",
-        "settings": [
-          {"key": "type", "description": "הגדרת מודול", "type": "fixed", "required": true, "value": "menu", "example": "type=menu"},
-          {"key": "digits", "description": "מספר ספרות", "type": "number", "required": false, "range": [1, 9], "example": "digits=2"}
-        ]
-      },
-      "api": {
-        "name": "API",
-        "description": "חיבור לשרתים חיצוניים",
-        "type_value": "api",
-        "settings": [
-          {"key": "type", "description": "הגדרת מודול API", "type": "fixed", "required": true, "value": "api", "example": "type=api"},
-          {"key": "api_link", "description": "כתובת URL של ה-API", "type": "url", "required": true, "example": "api_link=https://example.com/api"},
-          {"key": "api_call_id_send", "description": "שליחת מזהה שיחה", "type": "enum", "required": false, "values": ["yes", "no"], "default": "no", "example": "api_call_id_send=no"}
-        ]
-      }
-    }
-  };
-
-  // טעינה מיידית של הסכימה המוטמעת (זמין מיד!)
-  SCHEMA = EMBEDDED_SCHEMA;
-  window.YM_IDE_SCHEMA = SCHEMA;
-  console.log('🎯 YM IDE Schema pre-loaded (embedded)');
-
-  // טעינת הסכימה - תחילה מוטמעת, אז מ-GitHub
+  // טעינת הסכימה מ-GitHub בלבד
   async function loadSchema() {
     try {
+      console.log('🔄 Loading YM IDE Schema from GitHub...');
       const response = await fetch(SCHEMA_URL);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
       SCHEMA = await response.json();
-      window.YM_IDE_SCHEMA = SCHEMA; // חשיפה לשימוש במודול החיפוש
-      console.log('✅ YM IDE Schema loaded from GitHub (updated)');
+      window.YM_IDE_SCHEMA = SCHEMA;
+      console.log('✅ YM IDE Schema loaded successfully from GitHub');
+      console.log(`📦 Loaded ${Object.keys(SCHEMA.modules || {}).length} modules`);
+      
       // עדכון רשימת מודולים
       window.dispatchEvent(new CustomEvent('ym-ide-ready', { detail: { schema: SCHEMA } }));
       return true;
     } catch (error) {
-      console.warn('⚠️  Failed to load from GitHub, keeping embedded schema');
-      return true;
+      console.error('❌ Failed to load schema from GitHub:', error);
+      console.error('🔗 URL:', SCHEMA_URL);
+      window.YM_IDE_SCHEMA = null;
+      SCHEMA = null;
+      return false;
     }
   }
 
@@ -1067,11 +1109,21 @@
     textarea.addEventListener('input', handleInput);
     textarea.addEventListener('keydown', handleKeyDown);
     
-    // ניתוח ראשוני - עם עיכוב קטן כדי שה-DOM יהיה מוכן
-    setTimeout(() => {
+    // ניתוח ראשוני - עם מספר ניסיונות
+    let attempts = 0;
+    const tryAnalyze = () => {
+      attempts++;
       analyzeContent();
-      console.log('✅ IDE activated - initial analysis complete');
-    }, 100);
+      
+      // אם ה-overlay עדיין ריק וה-textarea מלא, נסה שוב
+      if (textarea.value && overlay.innerHTML.trim() === '' && attempts < 5) {
+        setTimeout(tryAnalyze, 100);
+      } else {
+        console.log('✅ IDE activated - initial analysis complete after', attempts, 'attempts');
+      }
+    };
+    
+    setTimeout(tryAnalyze, 50);
   }
 
   function handleInput(e) {
